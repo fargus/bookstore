@@ -2,18 +2,18 @@ package db;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name="BOOKS")
 public class Books implements Serializable{
+	
 	@Id
 	@GeneratedValue
 	private int id;
+	@Column(unique=true, nullable=false)
 	private String title;
+	@Column(nullable=false)
 	private float price;
 	@ManyToMany
 	 @JoinTable(name="A2B",
@@ -24,11 +24,10 @@ public class Books implements Serializable{
 		        
 		        )
 	private Collection<Authors> idauthors;
-	@OneToMany(mappedBy="idbooks")
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="book")
 	private Collection<Sellhistory> sellhistory;
 	
 	public Books(){};
-	
 	
 	public int getId(){
 		return id;
@@ -51,20 +50,16 @@ public class Books implements Serializable{
 		this.price=price;
 	}
 
-	
 	public void setIdauthors(Collection<Authors> idauthors) {
 		this.idauthors = idauthors;
 	}
-
 	public Collection<Authors> getIdauthors() {
 		return idauthors;
 	}
 	
-	
 	public void setSellhistory(Collection<Sellhistory> sellhistory) {
 		this.sellhistory = sellhistory;
 	}
-
 	public Collection<Sellhistory> getSellhistory() {
 		return sellhistory;
 	}

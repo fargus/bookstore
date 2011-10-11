@@ -1,9 +1,12 @@
 package test;
 
+import UI.ConsoleUI;
+
 public class Application {
 
 	public static void main(String[] args){
-		ConsoleClient.run();
+		
+		ConsoleUI.run();
 		System.out.print("Ok");
 		
 	}

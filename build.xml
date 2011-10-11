@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bookstore" default="compile">
+	<property name="sql.driver" value="com.mysql.jdbc.Driver"/>
+  	<property name="sql.url" value="jdbc:mysql://localhost/"/>
+  	<property name="sql.user" value="root"/>
+  	<property name="sql.pass" value="dbuser"/>
+	<target name="init">
+		<mkdir dir="build/classes" />
+		<mkdir dir="dist" />
+	</target>
+	<target name="compile" depends="init" >
+		<javac srcdir="src"
+		destdir="build/classes" includeantruntime="false">
+			<classpath>
+				<fileset dir="lib">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+		<copy todir="build/classes/META-INF">
+			<fileset dir="src/META-INF" includes="*.xml"/>
+		</copy>
+	</target>
+	<target name="clean" depends="init">
+		<delete dir="build" />
+		<delete dir="dist" />
+	</target>
+	<target name="archive" depends="compile">
+		<jar destfile="dist/bookstore.jar" basedir="build/classes"/>
+	</target>
+	<target name="execute" depends="compile, createSchema">
+		<echo level="warning" message="running" />
+		<java
+		classname="test.Application"
+		classpath="build/classes">
+			<classpath>
+				<fileset dir="lib">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+	<target name="createSchema">
+  		<sql driver="${sql.driver}" url="${sql.url}" userid="${sql.user}" 
+    		password="${sql.pass}" >
+    		<classpath>
+				<pathelement path="lib/mysql-connector-java-5.1.17-bin.jar"/>
+			</classpath>
+  			<transaction src="createschema.sql"/>
+  		</sql>
+  	</target>
+</project>

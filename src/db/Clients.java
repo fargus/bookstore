@@ -2,23 +2,21 @@ package db;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name="CLIENTS")
 public class Clients implements Serializable{
+	
 	@Id
 	@GeneratedValue
 	private int id;
+	@Column(unique=true, nullable=false)
 	private String name;
-	@OneToMany(mappedBy="idclients")
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="client")
 	private Collection<Sellhistory> sellhistory;
 	
 	public Clients(){};
-	
 	
 	public int getId(){
 		return id;
@@ -34,11 +32,9 @@ public class Clients implements Serializable{
 		this.name=name;
 	}
 
-	
 	public void setSellhistory(Collection<Sellhistory> sellhistory) {
 		this.sellhistory = sellhistory;
 	}
-
 	public Collection<Sellhistory> getSellhistory() {
 		return sellhistory;
 	}

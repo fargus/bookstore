@@ -2,23 +2,20 @@ package db;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.*;
-
-
 
 @Entity
 @Table(name="AUTHORS")
 public class Authors implements Serializable{
+	
 	@Id
 	@GeneratedValue
 	private int id;
+	@Column(unique=true, nullable=false)
 	private String name;
 	@ManyToMany(mappedBy="idauthors")
 	private Collection<Books> idbooks;
-	
+
 	public Authors(){};
 	
 	public int getId(){
@@ -35,7 +32,6 @@ public class Authors implements Serializable{
 		this.name=name;
 	}
 	
-	@ManyToMany(mappedBy="idauthors")
 	public Collection<Books> getIdbooks(){
 		return idbooks;
 	}
