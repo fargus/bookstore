@@ -20,6 +20,7 @@ public class HistoryManager {
 		System.out.println("*---------------------------*");
 		
 		if(ShowTables.showHistory(em)!=0){
+			
 			Sellhistory s;
 			System.out.println("Input entry id to delete:");
 			s=em.find(Sellhistory.class,ConsoleInput.getInt());
@@ -27,7 +28,9 @@ public class HistoryManager {
 				System.out.println("Entry not find!");
 			}
 			else{
+				em.getTransaction().begin();
 				em.remove(s);
+				em.getTransaction().commit();
 				System.out.println("Entry deleted");
 			}
 		}

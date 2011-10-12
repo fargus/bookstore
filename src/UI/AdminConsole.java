@@ -1,6 +1,8 @@
 package UI;
 
 import javax.persistence.EntityManager;
+import javax.persistence.RollbackException;
+
 import managers.AuthorManager;
 import managers.BookManager;
 import managers.ClientManager;
@@ -8,13 +10,10 @@ import managers.HistoryManager;
 import db.MyEntityManager;
 
 public class AdminConsole {
-	
-	
-	
+		
 	public static void run(){
 		adminAction();
 	}
-	
 	private static void showAdminMenu(){
 		System.out.println("*---------------------------*");
 		System.out.println("*\tAdmin console\t\t*");
@@ -69,7 +68,6 @@ public class AdminConsole {
 		
 		int mng_action;
 		EntityManager em=MyEntityManager.getEM();
-		em.getTransaction().begin();
 		
 		do{
 			System.out.println("*---------------------------*");
@@ -113,14 +111,12 @@ public class AdminConsole {
 			}
 		}
 		while (mng_action!=0);
-		em.getTransaction().commit();
 		em.close();
 	}
 	private static void manageHistory(){
 		
 		int mng_history=0;
 		EntityManager em=MyEntityManager.getEM();
-		em.getTransaction().begin();
 		
 		do{
 			System.out.println("*---------------------------*");
@@ -169,14 +165,12 @@ public class AdminConsole {
     		}
     	}
 		while (mng_history!=0);
-		em.getTransaction().commit();
 		em.close();
 	}
 	private static void manageBooks(){
 		
 		int mng_book;
 		EntityManager em=MyEntityManager.getEM();
-		em.getTransaction().begin();
 		
 		do{
 			System.out.println("*---------------------------*");
@@ -237,14 +231,12 @@ public class AdminConsole {
        		}
        	}
 		while (mng_book!=0);
-		em.getTransaction().commit();
 		em.close();
 	}
 	private static void manageAuthors(){
 		
 		int mng_author;
 		EntityManager em=MyEntityManager.getEM();
-		em.getTransaction().begin();
 		
 		do{
 			System.out.println("*---------------------------*");
@@ -280,7 +272,7 @@ public class AdminConsole {
        		}
        	}
 		while (mng_author!=0);
-		em.getTransaction().commit();
+		
 		em.close();
 	}
 }

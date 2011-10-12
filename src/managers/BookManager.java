@@ -60,13 +60,18 @@ public class BookManager {
 		}while((author_id!=0)||(flag_1==false));
 		
 		b.setIdauthors(col);
+		
+		em.getTransaction().begin();
 		try{
 			em.persist(b);
 			System.out.println("\n*\tNew book "+b.getTitle()+" added\t*\n");
 		}catch(Exception e){
 			System.out.println("Books already exist!");
+			em.getTransaction().rollback();
 		}
-		
+		if(em.getTransaction().isActive()){
+			em.getTransaction().commit();
+		}
 	}
 	public static void delBook(EntityManager em){
 		
@@ -84,7 +89,9 @@ public class BookManager {
 				System.out.println("Book not find!");
 			}
 			else{
+				em.getTransaction().begin();
 				em.remove(book);
+				em.getTransaction().commit();
 				System.out.println("Book "+book.getTitle()+" deleted");
 			}
 		}
@@ -101,6 +108,7 @@ public class BookManager {
 		System.out.println("*---------------------------*");
 		
 		if(ShowTables.showBooks(em)!=0){
+			
 			do{
 				System.out.println("Input book id to add author");
 				book=em.find(Books.class,ConsoleInput.getInt());
@@ -132,11 +140,12 @@ public class BookManager {
 			}
 			else{
 				book.getIdauthors().add(author);
+				em.getTransaction().begin();
 				em.flush();
+				em.getTransaction().commit();
 				System.out.println("Author "+author.getName()+" added to book "+book.getTitle());
 			}
 		}
-		
 	}
 	public static void changeAuth(EntityManager em){
 		
@@ -151,8 +160,8 @@ public class BookManager {
 		System.out.println("*\tChange author\t*");
 		System.out.println("*---------------------------*");
 		
-		
 		if(ShowTables.showBooks(em)!=0){
+			
 			do{
 				System.out.println("Input book id to change author");
 				book=em.find(Books.class,ConsoleInput.getInt());
@@ -199,15 +208,15 @@ public class BookManager {
 				}
 				else{
 					book.getIdauthors().add(author);
+					em.getTransaction().begin();
 					em.flush();
+					em.getTransaction().commit();
 					System.out.println("Author "+author.getName()+" added to book "+book.getTitle());
 					flag_3=true;
 				}
 				
 			}while(!flag_3);
 		}
-		
-		
 	}
 	public static void delAuthFromBook(EntityManager em){
 		
@@ -220,13 +229,17 @@ public class BookManager {
 		System.out.println("*  Delete author from book  *");
 		System.out.println("*---------------------------*");
 		
-		
 		if(ShowTables.showBooks(em)!=0){
+			
 			do{
 				System.out.println("Input book id to delete author");
 				book=em.find(Books.class,ConsoleInput.getInt());
 				if(book==null){
 					System.out.println("Book not find!");
+				}
+				else if(book.getIdauthors().size()==1){
+					System.out.println("Book have 1 author, nothing to delete!");
+					return;
 				}
 				else{
 					flag_1=true;
@@ -246,7 +259,9 @@ public class BookManager {
 				for(Authors a:book.getIdauthors()){
 					if(a.getId()==author_id){
 						book.getIdauthors().remove(a);
+						em.getTransaction().begin();
 						em.flush();
+						em.getTransaction().commit();
 						flag_2=true;
 						System.out.println("Author "+a.getName()+" deleted from book "+book.getTitle());
 						break;
@@ -268,7 +283,6 @@ public class BookManager {
 		System.out.println("\tChange price");
 		System.out.println("*---------------------------*");
 		
-		
 		if(ShowTables.showBooks(em)!=0){
 			while(!flag_1){
 				System.out.println("\nInput book's id to change price:");
@@ -283,7 +297,9 @@ public class BookManager {
 			
 			System.out.println("Input new price:");
 			book.setPrice(ConsoleInput.getFloat());
+			em.getTransaction().begin();
 			em.flush();
+			em.getTransaction().commit();
 			System.out.println("Price change:"+book.getTitle()+"-"+book.getPrice()+"");
 		}
 	}
