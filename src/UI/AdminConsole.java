@@ -14,25 +14,13 @@ public class AdminConsole {
 	public static void run(){
 		adminAction();
 	}
-	private static void showAdminMenu(){
-		System.out.println("*---------------------------*");
-		System.out.println("*\tAdmin console\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t1:Manage books\t\t*");
-		System.out.println("*\t2:Manage authors\t*");
-		System.out.println("*\t3:Manage clients\t*");
-		System.out.println("*\t4:Manage history\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t0:Exit admin console\t*");
-		System.out.println("*---------------------------*");
-	}
+	
 	private static void adminAction(){
 
 		int number;
 		
         do{
-        	showAdminMenu();
-        	System.out.println("Choose your action:-->");
+        	ShowMenu.showAdminMenu();
         	number = ConsoleInput.getInt();
         	switch(number){
         	case 1:{
@@ -64,24 +52,14 @@ public class AdminConsole {
        	}
 		while (number!=0);
 	}	
+	
 	private static void manageClients(){
 		
 		int mng_action;
 		EntityManager em=MyEntityManager.getEM();
 		
 		do{
-			System.out.println("*---------------------------*");
-			System.out.println("*\tManage clients\t\t*");
-			System.out.println("*---------------------------*");
-			System.out.println("*\t1:Show clients\t\t*");
-			System.out.println("*\t2:Add clients\t\t*");
-			System.out.println("*\t3:Del clients\t\t*");
-			System.out.println("*---------------------------*");
-			System.out.println("*\t0:Exit client manage\t*");
-			System.out.println("*---------------------------*");
-			
-			System.out.println("Choose your action:-->");
-			
+			ShowMenu.showMngClientsMenu();
 			mng_action=ConsoleInput.getInt();
 			switch(mng_action){
 			
@@ -113,25 +91,14 @@ public class AdminConsole {
 		while (mng_action!=0);
 		em.close();
 	}
+	
 	private static void manageHistory(){
 		
 		int mng_history=0;
 		EntityManager em=MyEntityManager.getEM();
 		
 		do{
-			System.out.println("*---------------------------*");
-			System.out.println("*\tManage history\t\t*");
-			System.out.println("*---------------------------*");
-			System.out.println("*\t1:Show history\t\t*");
-			System.out.println("*\t2:Del history\t\t*");
-			System.out.println("*\t3:Total by date\t\t*");
-			System.out.println("*\t4:Total by date&clients\t*");
-			System.out.println("*\t5:SuperQuery\t\t*");
-			System.out.println("*---------------------------*");
-			System.out.println("*\t0:Exit history manage\t*");
-			System.out.println("*---------------------------*");
-		
-			System.out.println("Choose your action:-->");
+			ShowMenu.showMngHistMenu();
 			mng_history =ConsoleInput.getInt();
     		switch(mng_history){
     		case 1:{
@@ -167,28 +134,14 @@ public class AdminConsole {
 		while (mng_history!=0);
 		em.close();
 	}
+	
 	private static void manageBooks(){
 		
 		int mng_book;
 		EntityManager em=MyEntityManager.getEM();
 		
 		do{
-			System.out.println("*---------------------------*");
-			System.out.println("*\tManage books\t\t*");
-			System.out.println("*---------------------------*");
-			System.out.println("*\t1:Show books\t\t*");
-			System.out.println("*\t2:Add books\t\t*");
-			System.out.println("*\t3:Del books\t\t*");
-			System.out.println("*\t4:Add author to book\t*");
-			System.out.println("*\t5:Change author\t\t*");
-			System.out.println("*\t6:Del author\t\t*");
-			System.out.println("*\t7:Change price\t\t*");
-			System.out.println("*---------------------------*");
-			System.out.println("*\t0:Exit book manage\t*");
-			System.out.println("*---------------------------*");
-
-        	System.out.println("Choose your action:-->");
-        	
+			ShowMenu.showMngBooksMenu();
         	mng_book = ConsoleInput.getInt();
         	switch(mng_book){
         	case 1:{
@@ -233,23 +186,14 @@ public class AdminConsole {
 		while (mng_book!=0);
 		em.close();
 	}
+	
 	private static void manageAuthors(){
 		
 		int mng_author;
 		EntityManager em=MyEntityManager.getEM();
 		
 		do{
-			System.out.println("*---------------------------*");
-			System.out.println("*\tManage author\t\t*");
-			System.out.println("*---------------------------*");
-			System.out.println("*\t1:Show authors\t\t*");
-			System.out.println("*\t2:Add author\t\t*");
-			System.out.println("*---------------------------*");
-			System.out.println("*\t0:Exit author manage\t*");
-			System.out.println("*---------------------------*");
-
-        	System.out.println("Choose your action:-->");
-        	
+			ShowMenu.showMngAuthMenu();
         	mng_author = ConsoleInput.getInt();
         	switch(mng_author){
         	case 1:{

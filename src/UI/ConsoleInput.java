@@ -23,6 +23,7 @@ public class ConsoleInput {
 		
 		return s;
 	}
+	
 	public static int getInt(){
 		
 		int i=0;
@@ -37,6 +38,7 @@ public class ConsoleInput {
 		}
 		return i;
 	}
+	
 	public static float getFloat(){
 		
 		float f=0;
@@ -51,6 +53,7 @@ public class ConsoleInput {
 		}
 		return f;
 	}
+	
 	public static String getDate(){
 		String s="";
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

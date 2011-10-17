@@ -31,7 +31,7 @@
 	<target name="execute" depends="compile, createSchema">
 		<echo level="warning" message="running" />
 		<java
-		classname="test.Application"
+		classname="main.Application"
 		classpath="build/classes">
 			<classpath>
 				<fileset dir="lib">
