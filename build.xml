@@ -49,4 +49,16 @@
   			<transaction src="createschema.sql"/>
   		</sql>
   	</target>
+	<target name="test" depends="compile">
+	  <junit fork="yes" haltonfailure="yes">
+	    <test name="unittests.BooksTest" />
+	    <formatter type="plain" usefile="false" />
+	    <classpath>
+	    	<pathelement location="build/classes" />
+	    	  <fileset dir="lib">
+	    	    <include name="*.jar"/>
+	    	  </fileset>	
+	    </classpath>
+	  </junit>
+	</target>
 </project>
