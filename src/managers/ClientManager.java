@@ -48,14 +48,14 @@ public class ClientManager {
 		}
 	}
 	public static void showYourHostory(EntityManager em){
-		
+		// FIXME : переменная объявляется там где используется , это не паскаль
 		List l;
 		
 		System.out.println("*---------------------------*");
 		System.out.println("*\tYour sellhistory\t*");
 		System.out.println("*---------------------------*");
 		System.out.println("Input your name:-->");
-		
+
 		l=em.createQuery("select sell, client.name, book.title  " +
 				"from Clients as client " +
 				"join client.sellhistory as sell " +

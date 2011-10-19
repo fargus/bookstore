@@ -3,6 +3,10 @@ package UI;
 public class ShowMenu {
 	
 	public static void showMenu(){
+		// FIXME : Dynamic menu 
+		// вот смотри , а если я поменяю местами пункты меню? или добавлю новые? или просто поменяю смысл пункта меню?
+		// в функции menuAction будет бардак...
+		// предложи как это исправить чтобы небыло неявной зависимости. меню выпадающее было гибкое и менять чтобы можно было на лету его
 		System.out.println("*---------------------------*");
 		System.out.println("*\tWelcome to bookstore\t*");
 		System.out.println("*---------------------------*");
@@ -21,6 +25,7 @@ public class ShowMenu {
 		System.out.println("Choose your action:-->");
 	}
 	
+	// FIXME : Dynamic menu 
 	public static void showAdminMenu(){
 		System.out.println("*---------------------------*");
 		System.out.println("*\tAdmin console\t\t*");
@@ -35,6 +40,7 @@ public class ShowMenu {
 		System.out.println("Choose your action:-->");
 	}
 	
+	// FIXME : Dynamic menu 
 	public static void showMngClientsMenu(){
 		System.out.println("*---------------------------*");
 		System.out.println("*\tManage clients\t\t*");
@@ -49,6 +55,7 @@ public class ShowMenu {
 		System.out.println("Choose your action:-->");
 	}
 	
+	// FIXME : Dynamic menu 
 	public static void showMngHistMenu(){
 		System.out.println("*---------------------------*");
 		System.out.println("*\tManage history\t\t*");
@@ -65,6 +72,7 @@ public class ShowMenu {
 		System.out.println("Choose your action:-->");
 	}
 	
+	// FIXME : Dynamic menu 
 	public static void showMngBooksMenu(){
 		System.out.println("*---------------------------*");
 		System.out.println("*\tManage books\t\t*");
@@ -83,6 +91,7 @@ public class ShowMenu {
     	System.out.println("Choose your action:-->");
 	}
 	
+	// FIXME : Dynamic menu 
 	public static void showMngAuthMenu(){
 		System.out.println("*---------------------------*");
 		System.out.println("*\tManage author\t\t*");

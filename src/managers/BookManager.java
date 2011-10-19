@@ -330,6 +330,7 @@ public class BookManager {
 		}
 		else{
 			System.out.println("Input your name:");
+			//FIXME : можно купить книгу на любое имя ? 
 			
 			client_name=ConsoleInput.getString();
 			l=em.createQuery("from Clients client " +
@@ -404,6 +405,7 @@ public class BookManager {
 			if (confirm.equals("Y")){
 				Sellhistory sh=new Sellhistory();
 				java.util.Date date=new java.util.Date();
+				// FIXME : using deprecated API 
 				Date sqlDate=new Date(date.getYear(),date.getMonth() , date.getDate());
 				sh.setBook(book);
 				sh.setClient(client);

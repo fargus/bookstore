@@ -48,6 +48,7 @@ public class ClientConsole {
        			break;
        		}
         	case 7:{
+        		// FIXME buy а не bay
        			BookManager.bayBook(em);
        			break;
        		}

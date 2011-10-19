@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="CLIENTS")
+// FIXME : почему класс называется во мн.ч.
 public class Clients implements Serializable{
 	
 	@Id
