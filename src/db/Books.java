@@ -6,9 +6,9 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="BOOKS")
-// FIXME : почему класс называется Books (мн ч)
+// FIXME : why did you call class "Books" ? (in plural)
 public class Books implements Serializable{
-	
+	 
 	@Id
 	@GeneratedValue
 	private int id;

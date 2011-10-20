@@ -4,9 +4,10 @@ public class ShowMenu {
 	
 	public static void showMenu(){
 		// FIXME : Dynamic menu 
-		// вот смотри , а если я поменяю местами пункты меню? или добавлю новые? или просто поменяю смысл пункта меню?
-		// в функции menuAction будет бардак...
-		// предложи как это исправить чтобы небыло неявной зависимости. меню выпадающее было гибкое и менять чтобы можно было на лету его
+		// point is to make menu dynamic 
+		// which means that you can create new menu items on-the-fly
+		// try to implement it . it's up to you how to do this. 
+		// the only requirement is to link showing menu item and its action together
 		System.out.println("*---------------------------*");
 		System.out.println("*\tWelcome to bookstore\t*");
 		System.out.println("*---------------------------*");
