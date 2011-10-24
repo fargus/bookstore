@@ -2,14 +2,44 @@ package managers;
 
 import javax.persistence.EntityManager;
 
+import menu.DynamicMenu;
+
 import UI.ConsoleInput;
-import db.Authors;
+import UI.ShowMenu;
+import UI.ShowTables;
+import db.Author;
+import db.MyEntityManager;
 
 public class AuthorManager {
+	
+	public static void manageAuthors(){
+		
+		EntityManager em=MyEntityManager.getEM();
+		
+		int number;
+        
+        do{
+        	ShowMenu.showMngAuthMenu(em);
+        	number = ConsoleInput.getInt();
+        	if(number==0){
+        		continue;
+        	}
+        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
+        		System.out.println("Invalid input,Try again");
+        	}
+        	else{
+        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        	}
+       	}
+		while (number!=0);
+    
+		em.close();
+	}
+	
 
 	public static void addAuthor(EntityManager em){
 		
-		Authors a=new Authors();
+		Author a=new Author();
 		
 		System.out.println("*---------------------------*");
 		System.out.println("*\tAdd author\t\t*");

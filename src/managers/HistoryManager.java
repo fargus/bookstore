@@ -3,15 +3,44 @@ package managers;
 import java.util.List;
 import javax.persistence.EntityManager;
 
+import menu.DynamicMenu;
+
 import UI.ConsoleInput;
+import UI.ShowMenu;
 import UI.ShowTables;
 
-import db.Authors;
-import db.Clients;
+import db.Author;
+import db.Client;
 import db.MyEntityManager;
 import db.Sellhistory;
 
 public class HistoryManager {
+	
+	
+	public static void manageHistory(){
+		
+		EntityManager em=MyEntityManager.getEM();
+
+		int number;
+        
+        do{
+        	ShowMenu.showMngHistMenu(em);
+        	number = ConsoleInput.getInt();
+        	if(number==0){
+        		continue;
+        	}
+        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
+        		System.out.println("Invalid input,Try again");
+        	}
+        	else{
+        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        	}
+       	}
+		while (number!=0);
+		
+		em.close();
+	}
+	
 	
 	public static void deleteEntry(EntityManager em){
 		
@@ -39,7 +68,7 @@ public class HistoryManager {
 	public static void totalOnDate(EntityManager em){
 		
 		List<Object[]> l=em.createQuery("select sell.date, sum(book.price) " +
-				"from Books as book " +
+				"from Book as book " +
 				"join book.sellhistory as sell " +
 				"group by sell.date").getResultList();
 		if(l.size()!=0){
@@ -55,7 +84,7 @@ public class HistoryManager {
 	public static void totalOnDateByClient(EntityManager em){
 		
 		List<Object[]> l=em.createQuery("select client.name, sell.date, sum(book.price) " +
-				"from Books as book " +
+				"from Book as book " +
 				"join book.sellhistory as sell " +
 				"join sell.client as client " +
 				"group by client.name, sell.date").getResultList();
@@ -76,14 +105,14 @@ public class HistoryManager {
 		boolean flag_2=false;
 		String begin_date;
 		String end_date;
-		Authors author;
-		Clients client;
+		Author author;
+		Client client;
 		
 		
 		if(ShowTables.showAuthors(em)!=0){
 			do{
 				System.out.println("Input author id:");
-				author=em.find(Authors.class,ConsoleInput.getInt());
+				author=em.find(Author.class,ConsoleInput.getInt());
 				if(author==null){
 					System.out.println("Wrong author id!");
 				}
@@ -96,7 +125,7 @@ public class HistoryManager {
 			if(ShowTables.showClients(em)!=0){
 				do{
 					System.out.println("Input client id:");
-					client=em.find(Clients.class,ConsoleInput.getInt());
+					client=em.find(Client.class,ConsoleInput.getInt());
 					if(client==null){
 						System.out.println("Wrong client id!");
 					}
@@ -113,7 +142,7 @@ public class HistoryManager {
 				
 				List<Object[]> l=em.createQuery("select client.name, " +
 						"author.name, sell.date, count(*) " +
-						"from Authors as author " +
+						"from Author as author " +
 						"join author.idbooks as book " +
 						"join book.sellhistory as sell " +
 						"join sell.client as client " +

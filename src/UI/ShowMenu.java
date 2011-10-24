@@ -1,108 +1,112 @@
 package UI;
 
+import javax.persistence.EntityManager;
+
+import managers.AuthorManager;
+import managers.BookManager;
+import managers.ClientManager;
+import managers.HistoryManager;
+import menu.DynamicMenu;
+import menu.MenuAction;
+
 public class ShowMenu {
 	
-	public static void showMenu(){
-		// FIXME : Dynamic menu 
-		// point is to make menu dynamic 
-		// which means that you can create new menu items on-the-fly
-		// try to implement it . it's up to you how to do this. 
-		// the only requirement is to link showing menu item and its action together
-		System.out.println("*---------------------------*");
-		System.out.println("*\tWelcome to bookstore\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t1:Show books\t\t*");
-		System.out.println("*\t2:Find books\t\t*");
-		System.out.println("*\t3:Show authors\t\t*");
-		System.out.println("* 4:Show authors w/o books\t*");
-		System.out.println("* 5:Show avg price by author*");
-		System.out.println("* 6:Show author with 2 books*\n*\t\tsold min\t*");
-		System.out.println("*\t7:Bay book\t\t*");
-		System.out.println("*\t8:Show history\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t9:Admin console\t\t*");
-		System.out.println("*\t0:Exit\t\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("Choose your action:-->");
-	}
-	
-	// FIXME : Dynamic menu 
-	public static void showAdminMenu(){
-		System.out.println("*---------------------------*");
-		System.out.println("*\tAdmin console\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t1:Manage books\t\t*");
-		System.out.println("*\t2:Manage authors\t*");
-		System.out.println("*\t3:Manage clients\t*");
-		System.out.println("*\t4:Manage history\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t0:Exit admin console\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("Choose your action:-->");
-	}
-	
-	// FIXME : Dynamic menu 
-	public static void showMngClientsMenu(){
-		System.out.println("*---------------------------*");
-		System.out.println("*\tManage clients\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t1:Show clients\t\t*");
-		System.out.println("*\t2:Add clients\t\t*");
-		System.out.println("*\t3:Del clients\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t0:Exit client manage\t*");
-		System.out.println("*---------------------------*");
+	public static void showMainMenu(final EntityManager em){
 		
-		System.out.println("Choose your action:-->");
+		DynamicMenu.getInstance().cleanMenu();
+		DynamicMenu.getInstance().setHeader("\tWelcome to bookstore\t");
+		DynamicMenu.getInstance().setAction("\tShow books\t\t", new MenuAction(){public void action(){ShowTables.showBooks(em);}});
+		DynamicMenu.getInstance().setAction("\tFind books\t\t", new MenuAction(){public void action(){BookManager.findBooks(em);}});
+		DynamicMenu.getInstance().setAction("\tShow authors\t\t", new MenuAction(){public void action(){ShowTables.showAuthors(em);}});
+		DynamicMenu.getInstance().setAction("Show authors w/o books\t", new MenuAction(){public void action(){ShowTables.showAithorWOBook(em);}});
+		DynamicMenu.getInstance().setAction("Show avg price by author", new MenuAction(){public void action(){ShowTables.showAveragePriceByAuthor(em);}});
+		DynamicMenu.getInstance().setAction("Show author with 2 books*\n*\t\tsold min\t", new MenuAction(){public void action(){ShowTables.showAuth2SoldMin(em);}});
+		DynamicMenu.getInstance().setAction("\tBuy book\t\t", new MenuAction(){public void action(){BookManager.buyBookMenu(em);}});
+		DynamicMenu.getInstance().setAction("\tShow history\t\t", new MenuAction(){public void action(){ClientManager.showYourHostory(em);}});
+		DynamicMenu.getInstance().setAction("\tAdmin console\t\t", new MenuAction(){public void action(){AdminConsole.run();}});
+		DynamicMenu.getInstance().showMenu();
 	}
 	
-	// FIXME : Dynamic menu 
-	public static void showMngHistMenu(){
-		System.out.println("*---------------------------*");
-		System.out.println("*\tManage history\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t1:Show history\t\t*");
-		System.out.println("*\t2:Del history\t\t*");
-		System.out.println("*\t3:Total by date\t\t*");
-		System.out.println("*\t4:Total by date&clients\t*");
-		System.out.println("*\t5:SuperQuery\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t0:Exit history manage\t*");
-		System.out.println("*---------------------------*");
-	
-		System.out.println("Choose your action:-->");
+	public static void showAdminMenu(){
+		
+		DynamicMenu.getInstance().cleanMenu();
+		DynamicMenu.getInstance().setHeader("\tAdmin console\t\t");
+		DynamicMenu.getInstance().setAction("\tManage books\t\t", new MenuAction(){public void action(){BookManager.manageBooks();}});
+		DynamicMenu.getInstance().setAction("\tManage authors\t", new MenuAction(){public void action(){AuthorManager.manageAuthors();}});
+		DynamicMenu.getInstance().setAction("\tManage clients\t", new MenuAction(){public void action(){ClientManager.manageClients();}});
+		DynamicMenu.getInstance().setAction("\tManage history\t", new MenuAction(){public void action(){HistoryManager.manageHistory();}});
+		DynamicMenu.getInstance().showMenu();
+		
 	}
 	
-	// FIXME : Dynamic menu 
-	public static void showMngBooksMenu(){
-		System.out.println("*---------------------------*");
-		System.out.println("*\tManage books\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t1:Show books\t\t*");
-		System.out.println("*\t2:Add books\t\t*");
-		System.out.println("*\t3:Del books\t\t*");
-		System.out.println("*\t4:Add author to book\t*");
-		System.out.println("*\t5:Change author\t\t*");
-		System.out.println("*\t6:Del author\t\t*");
-		System.out.println("*\t7:Change price\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t0:Exit book manage\t*");
-		System.out.println("*---------------------------*");
+	public static void showMngClientsMenu(final EntityManager em){
+	
+		DynamicMenu.getInstance().cleanMenu();
+		DynamicMenu.getInstance().setHeader("\tManage clients\t\t");
+		DynamicMenu.getInstance().setAction("\tShow clients\t\t", new MenuAction(){public void action(){ShowTables.showClients(em);}});
+		DynamicMenu.getInstance().setAction("\tAdd clients\t\t", new MenuAction(){public void action(){ClientManager.addClient(em);}});
+		DynamicMenu.getInstance().setAction("\tDel clients\t\t", new MenuAction(){public void action(){ClientManager.delClient(em);}});
+		DynamicMenu.getInstance().showMenu();
+		
+	}
+	
+	public static void showMngHistMenu(final EntityManager em){
+		
+		DynamicMenu.getInstance().cleanMenu();
+		DynamicMenu.getInstance().setHeader("\tManage history\t\t");
+		DynamicMenu.getInstance().setAction("\tShow history\t\t", new MenuAction(){public void action(){ShowTables.showHistory(em);}});
+		DynamicMenu.getInstance().setAction("\tDel history\t\t", new MenuAction(){public void action(){HistoryManager.deleteEntry(em);}});
+		DynamicMenu.getInstance().setAction("\tTotal by date\t\t", new MenuAction(){public void action(){HistoryManager.totalOnDate(em);}});
+		DynamicMenu.getInstance().setAction("\tTotal by date&clients\t", new MenuAction(){public void action(){HistoryManager.totalOnDateByClient(em);}});
+		DynamicMenu.getInstance().setAction("\tSuperQuery\t\t", new MenuAction(){public void action(){HistoryManager.superQuery(em);}});
+		DynamicMenu.getInstance().showMenu();
+		
+	}
+	
+	public static void showMngBooksMenu(final EntityManager em){
+		
+    	DynamicMenu.getInstance().cleanMenu();
+		DynamicMenu.getInstance().setHeader("\tManage books\t\t");
+		DynamicMenu.getInstance().setAction("\tShow books\t\t", new MenuAction(){public void action(){ShowTables.showBooks(em);}});
+		DynamicMenu.getInstance().setAction("\tAdd books\t\t", new MenuAction(){public void action(){BookManager.addBook(em);}});
+		DynamicMenu.getInstance().setAction("\tDel books\t\t", new MenuAction(){public void action(){BookManager.delBook(em);}});
+		DynamicMenu.getInstance().setAction("\tAdd author to book\t", new MenuAction(){public void action(){BookManager.addAuthToBook(em);}});
+		DynamicMenu.getInstance().setAction("\tChange author\t\t", new MenuAction(){public void action(){BookManager.changeAuth(em);}});
+		DynamicMenu.getInstance().setAction("\tDel author\t\t", new MenuAction(){public void action(){BookManager.delAuthFromBook(em);}});
+		DynamicMenu.getInstance().setAction("\tChange price\t\t", new MenuAction(){public void action(){BookManager.changePrice(em);}});
+		DynamicMenu.getInstance().showMenu();
+		
+	}
+	
+	public static void showMngAuthMenu(final EntityManager em){
 
-    	System.out.println("Choose your action:-->");
+    	DynamicMenu.getInstance().cleanMenu();
+		DynamicMenu.getInstance().setHeader("\tManage author\t\t");
+		DynamicMenu.getInstance().setAction("\tShow authors\t\t", new MenuAction(){public void action(){ShowTables.showAuthors(em);}});
+		DynamicMenu.getInstance().setAction("\tAdd author\t\t", new MenuAction(){public void action(){AuthorManager.addAuthor(em);}});
+		DynamicMenu.getInstance().showMenu();
+		
 	}
 	
-	// FIXME : Dynamic menu 
-	public static void showMngAuthMenu(){
-		System.out.println("*---------------------------*");
-		System.out.println("*\tManage author\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t1:Show authors\t\t*");
-		System.out.println("*\t2:Add author\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t0:Exit author manage\t*");
-		System.out.println("*---------------------------*");
-
-    	System.out.println("Choose your action:-->");
+	public static void showFindBookMenu(final EntityManager em){
+		
+		DynamicMenu.getInstance().cleanMenu();
+		DynamicMenu.getInstance().setHeader("\tFind books\t\t");
+		DynamicMenu.getInstance().setAction("\tFind by title\t\t", new MenuAction(){public void action(){ShowTables.showBooksByTitle(em);}});
+		DynamicMenu.getInstance().setAction("\tFind by author\t", new MenuAction(){public void action(){ShowTables.showBooksByAuthor(em);}});
+		DynamicMenu.getInstance().setAction("Show pop book by qty\t", new MenuAction(){public void action(){ShowTables.showPopBookByQty(em);}});
+		DynamicMenu.getInstance().setAction("Show pop book by total\t", new MenuAction(){public void action(){ShowTables.showPopBookByTotal(em);}});
+		DynamicMenu.getInstance().setAction("\tShow unsold book\t", new MenuAction(){public void action(){ShowTables.showUnsoldBooks(em);}});
+		DynamicMenu.getInstance().showMenu();
+		
+	}
+	
+	public static void showBuyBookMenu(final EntityManager em){
+		DynamicMenu.getInstance().cleanMenu();
+		DynamicMenu.getInstance().setHeader("\tBuy book\t\t");
+		DynamicMenu.getInstance().setAction("\tSelect book from list\t", new MenuAction(){public void action(){ShowTables.showBooks(em);BookManager.buyBook(em);}});
+		DynamicMenu.getInstance().setAction("\tFind book\t\t", new MenuAction(){public void action(){BookManager.findBooks(em);}});
+		DynamicMenu.getInstance().setAction("\tBuy book by id\t", new MenuAction(){public void action(){BookManager.buyBook(em);}});
+		DynamicMenu.getInstance().showMenu();
 	}
 }

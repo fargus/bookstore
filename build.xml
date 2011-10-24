@@ -44,7 +44,9 @@
   		<sql driver="${sql.driver}" url="${sql.url}" userid="${sql.user}" 
     		password="${sql.pass}" >
     		<classpath>
-				<pathelement path="lib/mysql-connector-java-5.1.17-bin.jar"/>
+    			<fileset dir="lib">
+    				<include name="*.jar"/>
+    			</fileset>
 			</classpath>
   			<transaction src="createschema.sql"/>
   		</sql>

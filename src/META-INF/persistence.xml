@@ -2,9 +2,9 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
     <persistence-unit name="Lib">
     	<provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <class>db.Books</class>
-        <class>db.Authors</class>
-        <class>db.Clients</class>
+        <class>db.Book</class>
+        <class>db.Author</class>
+        <class>db.Client</class>
         <class>db.Sellhistory</class>
         <properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>

@@ -4,17 +4,17 @@ import java.util.*;
 
 import javax.persistence.EntityManager;
 
-import db.Authors;
-import db.Books;
-import db.Clients;
+import db.Author;
+import db.Book;
+import db.Client;
 import db.Sellhistory;
 
 public class ShowTables {
 	
-	public static void showBook(Books book){
+	public static void showBook(Book book){
 		System.out.println("Id\tTitle\tPrice\tAuthors");
 		System.out.print(book.getId()+"\t"+book.getTitle()+"\t"+book.getPrice()+"\t");
-		for(Authors a:book.getIdauthors()){
+		for(Author a:book.getIdauthors()){
 			System.out.print(a.getName()+"/");
 		}
 		System.out.println();
@@ -22,7 +22,7 @@ public class ShowTables {
 	}
 	public static int showBooks(EntityManager em){
 		
-		Books b;
+		Book b;
 		String name;
 		int current_id;
 		int last_id=0;
@@ -30,7 +30,7 @@ public class ShowTables {
 		
 		l=em.createQuery(
 				"select book, author.name " +
-				"from Books as book left join" +
+				"from Book as book left join" +
 				" book.idauthors as author").getResultList();
 		if(l.size()==0){
 			System.out.println("Books not find!");
@@ -40,7 +40,7 @@ public class ShowTables {
 			System.out.print("Id\tTitle\tPrice\tAuthors");
 			for(int i=0;i<l.size();i++){
 				Object[] row=(Object[])l.get(i);
-				b=(Books)row[0];
+				b=(Book)row[0];
 				current_id=b.getId();
 				name=row[1].toString();
 				if(current_id!=last_id){
@@ -58,13 +58,13 @@ public class ShowTables {
 	public static int showAuthors(EntityManager em){
 		
 		List l;
-		Authors a;
+		Author a;
 		
-		l=em.createQuery("from Authors").getResultList();
+		l=em.createQuery("from Author").getResultList();
 		if(l.size()!=0){
 			System.out.println("*Id*\t*Name*");
 			for(Object obj:l){
-				a=(Authors)obj;
+				a=(Author)obj;
 				System.out.println(a.getId()+"\t\t"+a.getName());
 			}	
 			return l.size();
@@ -76,7 +76,7 @@ public class ShowTables {
 	}
 	public static int showHistory(EntityManager em){
 		List l=em.createQuery("select sell, client.name, book.title  " +
-				"from Clients as client " +
+				"from Client as client " +
 				"join client.sellhistory as sell " +
 				"join sell.book as book").getResultList();
 		
@@ -96,10 +96,10 @@ public class ShowTables {
 	}
 	public static int showClients(EntityManager em){
 		
-		List<Clients> l=em.createQuery("from Clients").getResultList();
+		List<Client> l=em.createQuery("from Client").getResultList();
 		if(l.size()!=0){
 			System.out.println("Id\tName");
-			for(Clients c:l){
+			for(Client c:l){
 				System.out.println(c.getId()+"\t"+c.getName());
 			}
 			return l.size();
@@ -112,7 +112,7 @@ public class ShowTables {
 	public static int showBooksByTitle(EntityManager em){
 		System.out.println("Input title:");
    		String findstring=ConsoleInput.getString();
-   		List l=em.createQuery("from Books " +
+   		List l=em.createQuery("from Book " +
    				"where title like '%"+findstring+"%'").getResultList();
    		
    		if(l.size()==0){
@@ -121,7 +121,7 @@ public class ShowTables {
    		else{
    			System.out.println("Id\tTitle\tPrice");
    	    	for(Object obj:l){
-   	    		Books b=(Books)obj;
+   	    		Book b=(Book)obj;
    	   			System.out.println(b.getId()+"\t"+b.getTitle()+"\t"+b.getPrice());
    	   		}	
    		}
@@ -130,7 +130,7 @@ public class ShowTables {
 	public static int showBooksByAuthor(EntityManager em){
 		System.out.println("Input author:");
     	String findstring=ConsoleInput.getString();
-   		List l=em.createQuery("select book from Books as book" +
+   		List l=em.createQuery("select book from Book as book" +
    				" inner join book.idauthors as author " +
    				"where author.name like '%"+findstring+"%'").getResultList();
    		if(l.size()==0){
@@ -139,7 +139,7 @@ public class ShowTables {
    		else{
    			System.out.println("Id\tTitle\tPrice");
    	    	for(Object obj:l){
-   	    		Books b=(Books)obj;
+   	    		Book b=(Book)obj;
    	   			System.out.println(b.getId()+"\t"+b.getTitle()+"\t"+b.getPrice());
    	   		}	
    		}
@@ -148,7 +148,7 @@ public class ShowTables {
 	public static int showPopBookByQty(EntityManager em){
 		
 		List<Object[]> l=em.createQuery("select book.id, book.title, count(*) as col " +
-				"from Books as book " +
+				"from Book as book " +
 				"join book.sellhistory as sell " +
 				"group by book.title " +
 				"order by col desc limit 1").getResultList();
@@ -166,7 +166,7 @@ public class ShowTables {
 	public static int showPopBookByTotal(EntityManager em){
 		
 		List<Object[]> l=em.createQuery("select book.id, book.title, count(*)*book.price as total " +
-				"from Books as book " +
+				"from Book as book " +
 				"join book.sellhistory as sell " +
 				"group by book.title " +
 				"order by total desc limit 1").getResultList();
@@ -182,14 +182,14 @@ public class ShowTables {
 	}
 	public static int showUnsoldBooks(EntityManager em){
 		
-		List<Books> l=em.createQuery("select book " +
-				"from Books as book " +
+		List<Book> l=em.createQuery("select book " +
+				"from Book as book " +
 				"left join book.sellhistory as sell " +
 				"where sell.book is null").getResultList();
 		
 		if(l.size()!=0){
 			System.out.println("Id\tTitle\tPrice");
-			for(Books book:l){
+			for(Book book:l){
 				System.out.println(book.getId()+"\t"+book.getTitle()+"\t"+book.getPrice());
 			}
 			return l.size();
@@ -201,13 +201,13 @@ public class ShowTables {
 	}
 	public static void showAithorWOBook(EntityManager em){
 		
-		List<Authors> l=em.createQuery("select author " +
-				"from Authors as author " +
+		List<Author> l=em.createQuery("select author " +
+				"from Author as author " +
 				"left join author.idbooks as book " +
 				"where book.id is null").getResultList();
 		if(l.size()!=0){
 			System.out.println("Id\tName");
-			for(Authors author:l){
+			for(Author author:l){
 				System.out.println(author.getId()+"\t"+author.getName());
 			}
 		}
@@ -219,7 +219,7 @@ public class ShowTables {
 		
 		List<Object[]> l=em.createQuery("select author.name, " +
 				"avg(book.price) " +
-				"from Authors as author " +
+				"from Author as author " +
 				"left join author.idbooks as book " +
 				"group by author.name").getResultList();
 		if(l.size()!=0){
@@ -238,15 +238,15 @@ public class ShowTables {
 	}
 	public static void showAuth2SoldMin(EntityManager em){
 		
-		List<Authors> l=em.createQuery("from Authors as author " +
+		List<Author> l=em.createQuery("from Author as author " +
 				"where 1<(select count(*) " +
-				"from Books as book " +
+				"from Book as book " +
 				"join book.sellhistory as sell " +
 				"join book.idauthors as author_b " +
 				"where author.id=author_b.id)").getResultList();
 		if(l.size()!=0){
 			System.out.println("Id\tName");
-			for(Authors author:l){
+			for(Author author:l){
 				System.out.println(author.getId()+"\t"+author.getName());
 			}
 		}

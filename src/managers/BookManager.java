@@ -7,22 +7,52 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import menu.DynamicMenu;
+import menu.MenuAction;
+
 import UI.ConsoleInput;
+import UI.ShowMenu;
 import UI.ShowTables;
 
-import db.Authors;
-import db.Books;
-import db.Clients;
+import db.Author;
+import db.Book;
+import db.Client;
+import db.MyEntityManager;
 import db.Sellhistory;
 
 public class BookManager {
 	
+	
+	public static void manageBooks(){
+		
+		EntityManager em=MyEntityManager.getEM();
+
+		int number;
+        
+        do{
+        	ShowMenu.showMngBooksMenu(em);
+        	number = ConsoleInput.getInt();
+        	if(number==0){
+        		continue;
+        	}
+        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
+        		System.out.println("Invalid input,Try again");
+        	}
+        	else{
+        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        	}
+       	}
+		while (number!=0);
+
+		em.close();
+	}
+	
 	public static void addBook(EntityManager em){
 		
 		int author_id;
-		Books b=new Books();
-		Authors a=new Authors();
-		Collection<Authors> col=new ArrayList<Authors>();
+		Book b=new Book();
+		Author a=new Author();
+		Collection<Author> col=new ArrayList<Author>();
 		boolean flag_1=false;
 		
 		System.out.println("*---------------------------*");
@@ -44,7 +74,7 @@ public class BookManager {
 				"\t(0 to add book):");
 			}
 			author_id=ConsoleInput.getInt();
-			a=em.find(Authors.class,author_id);
+			a=em.find(Author.class,author_id);
 			if(a!=null){
 				if(!col.contains(a)){
 					col.add(a);
@@ -78,7 +108,7 @@ public class BookManager {
 	}
 	public static void delBook(EntityManager em){
 		
-		Books book;
+		Book book;
 		
 		System.out.println("*---------------------------*");
 		System.out.println("*\tAdd book\t\t*");
@@ -87,7 +117,7 @@ public class BookManager {
 		if(ShowTables.showBooks(em)!=0){
 			System.out.println("Input book id to delete:");
 			
-			book=em.find(Books.class,ConsoleInput.getInt());
+			book=em.find(Book.class,ConsoleInput.getInt());
 			if(book==null){
 				System.out.println("Book not find!");
 			}
@@ -101,8 +131,8 @@ public class BookManager {
 	}
 	public static void addAuthToBook(EntityManager em){
 		
-		Books book;
-		Authors author;
+		Book book;
+		Author author;
 		boolean flag_1=false;
 		boolean flag_2=false;
 		
@@ -114,7 +144,7 @@ public class BookManager {
 			
 			do{
 				System.out.println("Input book id to add author");
-				book=em.find(Books.class,ConsoleInput.getInt());
+				book=em.find(Book.class,ConsoleInput.getInt());
 				if(book==null){
 					System.out.println("Book not find!");
 				}
@@ -129,7 +159,7 @@ public class BookManager {
 			
 			do{
 				System.out.println("Input author id to add");
-				author=em.find(Authors.class,ConsoleInput.getInt());
+				author=em.find(Author.class,ConsoleInput.getInt());
 				if(author==null){
 					System.out.println("Author not find!");
 				}
@@ -152,8 +182,8 @@ public class BookManager {
 	}
 	public static void changeAuth(EntityManager em){
 		
-		Books book;
-		Authors author;
+		Book book;
+		Author author;
 		int author_id;
 		boolean flag_1=false;
 		boolean flag_2=false;
@@ -167,7 +197,7 @@ public class BookManager {
 			
 			do{
 				System.out.println("Input book id to change author");
-				book=em.find(Books.class,ConsoleInput.getInt());
+				book=em.find(Book.class,ConsoleInput.getInt());
 				if(book==null){
 					System.out.println("Book not find!");
 				}
@@ -178,7 +208,7 @@ public class BookManager {
 			
 			System.out.println("Book's authors:");
 			System.out.println("Id\tName");
-			for(Authors a:book.getIdauthors()){
+			for(Author a:book.getIdauthors()){
 				System.out.println(a.getId()+"\t"+a.getName());
 			}
 			System.out.println("*---------------------------*");
@@ -186,7 +216,7 @@ public class BookManager {
 			do{
 				System.out.println("Input author id to change");
 				author_id = ConsoleInput.getInt();
-				for(Authors a:book.getIdauthors()){
+				for(Author a:book.getIdauthors()){
 					if(a.getId()==author_id){
 						book.getIdauthors().remove(a);
 						flag_2=true;
@@ -202,7 +232,7 @@ public class BookManager {
 			ShowTables.showAuthors(em);
 			do{
 				System.out.println("Input new author id");
-				author=em.find(Authors.class,ConsoleInput.getInt());
+				author=em.find(Author.class,ConsoleInput.getInt());
 				if(author==null){
 					System.out.println("Author not find!");
 				}
@@ -223,7 +253,7 @@ public class BookManager {
 	}
 	public static void delAuthFromBook(EntityManager em){
 		
-		Books book;
+		Book book;
 		int author_id;
 		boolean flag_1=false;
 		boolean flag_2=false;
@@ -236,7 +266,7 @@ public class BookManager {
 			
 			do{
 				System.out.println("Input book id to delete author");
-				book=em.find(Books.class,ConsoleInput.getInt());
+				book=em.find(Book.class,ConsoleInput.getInt());
 				if(book==null){
 					System.out.println("Book not find!");
 				}
@@ -251,7 +281,7 @@ public class BookManager {
 			
 			System.out.println("Book's authors:");
 			System.out.println("Id\tName");
-			for(Authors a:book.getIdauthors()){
+			for(Author a:book.getIdauthors()){
 				System.out.println(a.getId()+"\t"+a.getName());
 			}
 			System.out.println("*---------------------------*");
@@ -259,7 +289,7 @@ public class BookManager {
 			do{
 				System.out.println("Input author id to delete");
 				author_id = ConsoleInput.getInt();
-				for(Authors a:book.getIdauthors()){
+				for(Author a:book.getIdauthors()){
 					if(a.getId()==author_id){
 						book.getIdauthors().remove(a);
 						em.getTransaction().begin();
@@ -279,7 +309,7 @@ public class BookManager {
 	}
 	public static void changePrice(EntityManager em){
 		
-		Books book=new Books();
+		Book book=new Book();
 		boolean flag_1=false;
 		
 		System.out.println("*---------------------------*");
@@ -289,7 +319,7 @@ public class BookManager {
 		if(ShowTables.showBooks(em)!=0){
 			while(!flag_1){
 				System.out.println("\nInput book's id to change price:");
-				book=em.find(Books.class,ConsoleInput.getInt());
+				book=em.find(Book.class,ConsoleInput.getInt());
 				if(book==null){
 					System.out.println("Invalid book id!");
 				}
@@ -306,98 +336,53 @@ public class BookManager {
 			System.out.println("Price change:"+book.getTitle()+"-"+book.getPrice()+"");
 		}
 	}
-	public static void bayBook(EntityManager em){
+	public static void buyBookMenu(EntityManager em){
+		int number;
+        
+        do{
+        	ShowMenu.showBuyBookMenu(em);
+        	number = ConsoleInput.getInt();
+        	if(number==0){
+        		continue;
+        	}
+        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
+        		System.out.println("Invalid input,Try again");
+        	}
+        	else{
+        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        	}
+       	}
+		while (number!=0);
+	}
+	public static void buyBook(EntityManager em){
 		
-		String client_name;
-		int baybook_number;
 		int bayid;
 		String confirm="";
-		Books book=new Books();
-		Clients client;
-		List l;
+		Book book=new Book();
+		Client client=em.find(Client.class, 1);
 		boolean flag_1=false;
-		boolean flag_2=false;
-		boolean new_client_flag=false;
-		
-		System.out.println("*---------------------------*");
-		System.out.println("*\tBay a book\t\t*");
-		System.out.println("*---------------------------*");
 		
 		em.getTransaction().begin();
 		
-		if(em.createQuery("from Books").getResultList().size()==0){
-			System.out.println("Nothing to bay!");
+		if(em.createQuery("from Book").getResultList().size()==0){
+			System.out.println("Nothing to buy!");
 		}
 		else{
-			System.out.println("Input your name:");
-			//FIXME : можно купить книгу на любое имя ? 
-			
-			client_name=ConsoleInput.getString();
-			l=em.createQuery("from Clients client " +
-					"where client.name='"+client_name+"'").getResultList();
-			if(l.size()==0){
-				client=new Clients();
-				client.setName(client_name);
-				em.persist(client);
-				l=em.createQuery("from Clients client " +
-						"where client.name='"+client_name+"'").getResultList();
-				client=(Clients)l.get(0);
-				new_client_flag=true;
-			}
-			else{
-				client=(Clients)l.get(0);
-			}	
 			
 			while(!flag_1){
-				
-				System.out.println("*---------------------------*");
-				System.out.println("* 1:Select book from list\t*");
-				System.out.println("*\t2:Find book\t\t*");
-				System.out.println("*\t3:Bay by book id\t*");
-				System.out.println("*---------------------------*");
-				System.out.println("Choose your method:");	
-				baybook_number=ConsoleInput.getInt();
-				switch(baybook_number){
-				case 1:{
-					ShowTables.showBooks(em);
-					flag_1=true;
-					break;
-				}
-				case 2:{
-					int i=findBooks(em);
-					if(i!=0){
-						flag_1=true;
-					}
-					break;
-				}
-				case 3:{
-					flag_1=true;
-					break;
-				}
-				case -1:{
-					break;
-				}
-				default:{
-					System.out.println("Invalid input,Try again");
-					break;
-				}
-				}
-			}
-			
-			while(!flag_2){
-				System.out.println("Input id book to bay:");
+				System.out.println("Input id book to buy:");
 				bayid=ConsoleInput.getInt();
-				book=em.find(Books.class,bayid);
+				book=em.find(Book.class,bayid);
 				if(book==null){
 					System.out.println("Invalid book id!");
 				}
 				else{
-					flag_2=true;
+					flag_1=true;
 				}
 			}
 			
 			while(!(confirm.equals("Y"))&&!(confirm.equals("N"))){
-				System.out.println("Realy want to bay "
+				System.out.println("Realy want to buy "
 						+book.getTitle()+" for "+book.getPrice()+" ?(Y/N)");
 				confirm=ConsoleInput.getString();
 			}
@@ -417,61 +402,29 @@ public class BookManager {
 				System.out.println("*-----------------------*");
 			}
 			else{
-				if(new_client_flag){
-					em.remove(client);
-				}
 				System.out.println(":)");;
 			}
 		}
 		em.getTransaction().commit();
 	}	
-	public static int findBooks(EntityManager em){
-	
-		int find_type_number;
-	
-		System.out.println("*---------------------------*");
-		System.out.println("*\t1:Find by title\t\t*");
-		System.out.println("*\t2:Find by author\t*");
-		System.out.println("* 3:Show pop book by qty\t*");
-		System.out.println("* 4:Show pop book by total\t*");
-		System.out.println("*\t5:Show unsold book\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("*\t0:Exit\t\t\t*");
-		System.out.println("*---------------------------*");
-		System.out.println("Choose your find action:-->");
-   	
-		find_type_number = ConsoleInput.getInt();
-		switch(find_type_number){
-		case 1:{
-			ShowTables.showBooksByTitle(em);
-			return findBooks(em);
-		}
-		case 2:{
-			ShowTables.showBooksByAuthor(em);
-			return findBooks(em);
-		}
-		case 3:{
-			ShowTables.showPopBookByQty(em);	
-			return findBooks(em);
-		}
-		case 4:{
-			ShowTables.showPopBookByTotal(em);
-			return findBooks(em);
-		}
-		case 5:{
-			ShowTables.showUnsoldBooks(em);
-			return findBooks(em);
-		}
-		case 0:{
-			return 0;
-		}
-  		case -1:{
-  			return findBooks(em);
-  		}
-  		default:{
-  			System.out.println("Invalid input,Try again");
-  			return findBooks(em);
-  		}
-		}
+	public static void findBooks(EntityManager em){
+		
+		int number;
+        
+        do{
+        	ShowMenu.showFindBookMenu(em);
+        	number = ConsoleInput.getInt();
+        	if(number==0){
+        		continue;
+        	}
+        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
+        		System.out.println("Invalid input,Try again");
+        	}
+        	else{
+        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        	}
+       	}
+		while (number!=0);
+		
 	}
 }

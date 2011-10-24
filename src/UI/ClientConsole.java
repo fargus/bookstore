@@ -2,8 +2,7 @@ package UI;
 
 import javax.persistence.EntityManager;
 
-import managers.BookManager;
-import managers.ClientManager;
+import menu.DynamicMenu;
 
 import db.MyEntityManager;
 
@@ -18,61 +17,22 @@ public class ClientConsole {
 		int number;
 		EntityManager em=MyEntityManager.getEM();
 		
-        do{
-        	ShowMenu.showMenu();
+		do{
+			ShowMenu.showMainMenu(em);
         	number = ConsoleInput.getInt();
-        	
-        	switch(number){
-        	case 1:{
-       			ShowTables.showBooks(em);
-       			break;
-       		}
-       		case 2:{
-       			BookManager.findBooks(em);
-       			break;
-       		}
-       		case 3:{
-       			ShowTables.showAuthors(em);
-        		break;
+        	if(number==0){
+        		continue;
         	}
-       		case 4:{
-       			ShowTables.showAithorWOBook(em);
-       			break;
-       		}
-       		case 5:{
-       			ShowTables.showAveragePriceByAuthor(em);
-       			break;
-       		}
-       		case 6:{
-       			ShowTables.showAuth2SoldMin(em);
-       			break;
-       		}
-        	case 7:{
-        		// FIXME buy а не bay
-       			BookManager.bayBook(em);
-       			break;
-       		}
-        	case 8:{
-       			ClientManager.showYourHostory(em);
-       			break;
-       		}
-       		case 9:{
-       			AdminConsole.run();
-       			break;
-       		}
-       		case -1:{
-       			break;
-       		}
-       		default:{
-       			if(number!=0){
-       				System.out.println("Invalid input,Try again");
-       			}	
-       			break;
-       		}
-       		}
+        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
+        		System.out.println("Invalid input,Try again");
+        	}
+        	else{
+        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        	}
         	em.clear();
        	}
-		while (number!=0); 
+		while (number!=0);
+
         em.close();
 	}
 }

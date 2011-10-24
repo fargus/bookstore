@@ -4,16 +4,46 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import menu.DynamicMenu;
+
 import UI.ConsoleInput;
+import UI.ShowMenu;
 import UI.ShowTables;
-import db.Clients;
+import db.Client;
+import db.MyEntityManager;
 import db.Sellhistory;
 
 public class ClientManager {
 	
+	public static void manageClients(){
+		
+		EntityManager em=MyEntityManager.getEM();
+		
+		int number;
+        
+        do{
+        	ShowMenu.showMngClientsMenu(em);
+        	number = ConsoleInput.getInt();
+        	if(number==0){
+        		continue;
+        	}
+        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
+        		System.out.println("Invalid input,Try again");
+        	}
+        	else{
+        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        	}
+       	}
+		while (number!=0);
+			
+		em.close();
+	}
+	
+	
+	
 	public static void addClient(EntityManager em){
 		
-		Clients new_client=new Clients();
+		Client new_client=new Client();
 		
 		System.out.println("Input client name:");	
 		new_client.setName(ConsoleInput.getString());
@@ -33,9 +63,9 @@ public class ClientManager {
 	public static void delClient(EntityManager em){
 		
 		if(ShowTables.showClients(em)!=0){
-			Clients del_client=new Clients();
+			Client del_client=new Client();
 			System.out.println("Input client id to delete:");
-			del_client=em.find(Clients.class,ConsoleInput.getInt());
+			del_client=em.find(Client.class,ConsoleInput.getInt());
 			if(del_client==null){
 				System.out.println("Client not find");
 			}
@@ -48,16 +78,14 @@ public class ClientManager {
 		}
 	}
 	public static void showYourHostory(EntityManager em){
-		// FIXME : переменная объявляется там где используется , это не паскаль
-		List l;
 		
 		System.out.println("*---------------------------*");
 		System.out.println("*\tYour sellhistory\t*");
 		System.out.println("*---------------------------*");
 		System.out.println("Input your name:-->");
 
-		l=em.createQuery("select sell, client.name, book.title  " +
-				"from Clients as client " +
+		List l=em.createQuery("select sell, client.name, book.title  " +
+				"from Client as client " +
 				"join client.sellhistory as sell " +
 				"join sell.book as book " +
 				"where client.name='"+ConsoleInput.getString()+"'").getResultList();

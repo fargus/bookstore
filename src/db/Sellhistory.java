@@ -16,10 +16,10 @@ public class Sellhistory implements Serializable{
 	private Date date;
 	@ManyToOne
     @JoinColumn(name="idclients",nullable = false)
-	private Clients client;
+	private Client client;
 	@ManyToOne
     @JoinColumn(name="idbooks",nullable = false)
-	private Books book;
+	private Book book;
 	@Column(nullable=false)
 	private float price;
 	
@@ -46,19 +46,19 @@ public class Sellhistory implements Serializable{
 		this.date=date;
 	}
 
-	public void setBook(Books book) {
+	public void setBook(Book book) {
 		this.book = book;
 	}
 
-	public Books getBook() {
+	public Book getBook() {
 		return book;
 	}
 
-	public void setClient(Clients client) {
+	public void setClient(Client client) {
 		this.client = client;
 	}
 
-	public Clients getClient() {
+	public Client getClient() {
 		return client;
 	}
 }
