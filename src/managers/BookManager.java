@@ -293,6 +293,7 @@ public class BookManager {
 						flag_2=true;
 						System.out.println("Author "+a.getName()+" deleted from book "+book.getTitle());
 						break;
+						
 					}
 				}
 				if(!flag_2){
