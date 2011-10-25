@@ -44,9 +44,8 @@ public class HistoryManager {
 	
 	public static void deleteEntry(EntityManager em){
 		
-		System.out.println("*---------------------------*");
-		System.out.println("*\tDelete history\t\t*");
-		System.out.println("*---------------------------*");
+		DynamicMenu.getInstance().setTitleHeader("\tDelete history\t\t");
+		DynamicMenu.getInstance().showTitle();
 		
 		if(ShowTables.showHistory(em)!=0){
 			

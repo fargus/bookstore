@@ -55,9 +55,8 @@ public class BookManager {
 		Collection<Author> col=new ArrayList<Author>();
 		boolean flag_1=false;
 		
-		System.out.println("*---------------------------*");
-		System.out.println("*\tAdd book\t\t*");
-		System.out.println("*---------------------------*");
+		DynamicMenu.getInstance().setTitleHeader("\tAdd book\t\t");
+		DynamicMenu.getInstance().showTitle();
 		System.out.println("Input book title:");
 		b.setTitle(ConsoleInput.getString());
 		
@@ -110,9 +109,8 @@ public class BookManager {
 		
 		Book book;
 		
-		System.out.println("*---------------------------*");
-		System.out.println("*\tAdd book\t\t*");
-		System.out.println("*---------------------------*");
+		DynamicMenu.getInstance().setTitleHeader("\tDel book\t\t");
+		DynamicMenu.getInstance().showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
 			System.out.println("Input book id to delete:");
@@ -136,9 +134,8 @@ public class BookManager {
 		boolean flag_1=false;
 		boolean flag_2=false;
 		
-		System.out.println("*---------------------------*");
-		System.out.println("*\tAdd author to book\t*");
-		System.out.println("*---------------------------*");
+		DynamicMenu.getInstance().setTitleHeader("\tAdd author to book\t");
+		DynamicMenu.getInstance().showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
 			
@@ -189,9 +186,8 @@ public class BookManager {
 		boolean flag_2=false;
 		boolean flag_3=false;
 		
-		System.out.println("*---------------------------*");
-		System.out.println("*\tChange author\t*");
-		System.out.println("*---------------------------*");
+		DynamicMenu.getInstance().setTitleHeader("\tChange author\t\t");
+		DynamicMenu.getInstance().showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
 			
@@ -258,9 +254,8 @@ public class BookManager {
 		boolean flag_1=false;
 		boolean flag_2=false;
 		
-		System.out.println("*---------------------------*");
-		System.out.println("*  Delete author from book  *");
-		System.out.println("*---------------------------*");
+		DynamicMenu.getInstance().setTitleHeader("  Delete author from book  ");
+		DynamicMenu.getInstance().showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
 			
@@ -312,9 +307,8 @@ public class BookManager {
 		Book book=new Book();
 		boolean flag_1=false;
 		
-		System.out.println("*---------------------------*");
-		System.out.println("\tChange price");
-		System.out.println("*---------------------------*");
+		DynamicMenu.getInstance().setTitleHeader("\tChange price\t");
+		DynamicMenu.getInstance().showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
 			while(!flag_1){
@@ -397,9 +391,8 @@ public class BookManager {
 				sh.setPrice(book.getPrice());
 				sh.setDate(sqlDate);
 				em.persist(sh);
-				System.out.println("*-----------------------*");
-				System.out.println("* Thank's for purchase  *");
-				System.out.println("*-----------------------*");
+				DynamicMenu.getInstance().setTitleHeader(" Thank's for purchase  ");
+				DynamicMenu.getInstance().showTitle();
 			}
 			else{
 				System.out.println(":)");;

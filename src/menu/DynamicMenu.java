@@ -5,13 +5,15 @@ import java.util.HashMap;
 public class DynamicMenu {
 	
 	private int numOfAction;
-	private String header;
+	private String menuHeader;
+	private String titleHeader;
 	private HashMap<Integer, MenuElement> action;
 	private static DynamicMenu instance;
 	
 	private DynamicMenu(){
 		numOfAction=0;
-		header="";
+		menuHeader="";
+		titleHeader="";
 		action=new HashMap<Integer, MenuElement>();
 	}
 	
@@ -23,11 +25,19 @@ public class DynamicMenu {
 	}
 
 	public void setHeader(String header) {
-		this.header = header;
+		this.menuHeader = header;
 	}
 	
-	public String getHeader(){
-		return header;
+	public String getMenuHeader(){
+		return menuHeader;
+	}
+	
+	public void setTitleHeader(String titleHeader) {
+		this.titleHeader = titleHeader;
+	}
+
+	public String getTitleHeader() {
+		return titleHeader;
 	}
 
 	public void setAction(String name,MenuAction action) {
@@ -41,14 +51,14 @@ public class DynamicMenu {
 
 	public void cleanMenu(){
 		numOfAction=0;
-		header="";
+		menuHeader="";
 		action.clear();
 	}
 	
 	public void showMenu(){
 		
 		System.out.println("*---------------------------*");
-		System.out.println("*"+header+"*");
+		System.out.println("*"+menuHeader+"*");
 		System.out.println("*---------------------------*");
 		for(int i=1;i<=numOfAction;i++){
 			System.out.println("* "+i+":"+action.get(i).getName()+"*");
@@ -57,6 +67,12 @@ public class DynamicMenu {
 		System.out.println("*\t0:Exit\t\t\t*");
 		System.out.println("*---------------------------*");
 		System.out.println("Choose your action:-->");
+	}
+
+	public void showTitle(){
+		System.out.println("*---------------------------*");
+		System.out.println("*"+titleHeader+"*");
+		System.out.println("*---------------------------*");
 	}
 	
 	

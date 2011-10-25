@@ -79,9 +79,8 @@ public class ClientManager {
 	}
 	public static void showYourHostory(EntityManager em){
 		
-		System.out.println("*---------------------------*");
-		System.out.println("*\tYour sellhistory\t*");
-		System.out.println("*---------------------------*");
+		DynamicMenu.getInstance().setTitleHeader("\tYour sellhistory\t");
+		DynamicMenu.getInstance().showTitle();
 		System.out.println("Input your name:-->");
 
 		List l=em.createQuery("select sell, client.name, book.title  " +

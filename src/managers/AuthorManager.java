@@ -41,9 +41,8 @@ public class AuthorManager {
 		
 		Author a=new Author();
 		
-		System.out.println("*---------------------------*");
-		System.out.println("*\tAdd author\t\t*");
-		System.out.println("*---------------------------*");
+		DynamicMenu.getInstance().setTitleHeader("\tAdd author\t\t");
+		DynamicMenu.getInstance().showTitle();
 		
 		System.out.println("Input author's name:");
 		a.setName(ConsoleInput.getString());
