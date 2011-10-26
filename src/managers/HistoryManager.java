@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 
 import menu.DynamicMenu;
 
+import Security.Security;
 import UI.ConsoleInput;
 import UI.ShowMenu;
 import UI.ShowTables;
@@ -24,16 +25,21 @@ public class HistoryManager {
 		int number;
         
         do{
-        	ShowMenu.showMngHistMenu(em);
-        	number = ConsoleInput.getInt();
-        	if(number==0){
-        		continue;
-        	}
-        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
-        		System.out.println("Invalid input,Try again");
+        	if(Security.getInstance().isLoginStatus()){
+        		ShowMenu.showMngHistMenu(em);
+            	number = ConsoleInput.getInt();
+            	if(number==0){
+            		continue;
+            	}
+            	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
+            		System.out.println("Invalid input,Try again");
+            	}
+            	else{
+            		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
+            	}
         	}
         	else{
-        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        		number=0;
         	}
        	}
 		while (number!=0);
@@ -44,8 +50,9 @@ public class HistoryManager {
 	
 	public static void deleteEntry(EntityManager em){
 		
-		DynamicMenu.getInstance().setTitleHeader("\tDelete history\t\t");
-		DynamicMenu.getInstance().showTitle();
+		DynamicMenu title=new DynamicMenu();
+		title.setTitleHeader("\tDelete history\t\t");
+		title.showTitle();
 		
 		if(ShowTables.showHistory(em)!=0){
 			

@@ -23,11 +23,11 @@ public class ClientConsole {
         	if(number==0){
         		continue;
         	}
-        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
+        	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
         		System.out.println("Invalid input,Try again");
         	}
         	else{
-        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
         	}
         	em.clear();
        	}

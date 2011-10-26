@@ -6,9 +6,11 @@ import javax.persistence.EntityManager;
 
 import menu.DynamicMenu;
 
+import Security.Security;
 import UI.ConsoleInput;
 import UI.ShowMenu;
 import UI.ShowTables;
+import db.Book;
 import db.Client;
 import db.MyEntityManager;
 import db.Sellhistory;
@@ -22,16 +24,21 @@ public class ClientManager {
 		int number;
         
         do{
-        	ShowMenu.showMngClientsMenu(em);
-        	number = ConsoleInput.getInt();
-        	if(number==0){
-        		continue;
-        	}
-        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
-        		System.out.println("Invalid input,Try again");
+        	if(Security.getInstance().isLoginStatus()){
+        		ShowMenu.showMngClientsMenu(em);
+            	number = ConsoleInput.getInt();
+            	if(number==0){
+            		continue;
+            	}
+            	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
+            		System.out.println("Invalid input,Try again");
+            	}
+            	else{
+            		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
+            	}
         	}
         	else{
-        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        		number=0;
         	}
        	}
 		while (number!=0);
@@ -41,24 +48,29 @@ public class ClientManager {
 	
 	
 	
-	public static void addClient(EntityManager em){
+	public static void changeRights(EntityManager em){
 		
-		Client new_client=new Client();
+		boolean flag_1=false;
+		Client client=new Client();
 		
-		System.out.println("Input client name:");	
-		new_client.setName(ConsoleInput.getString());
-		
-		em.getTransaction().begin();
-		try{
-			em.persist(new_client);	
-			System.out.println("New client "+new_client.getName()+" added");
-		}catch(Exception e){
-			System.out.println("Client already exist!");
-			em.getTransaction().rollback();
-		}
-		if(em.getTransaction().isActive()){
+		if(ShowTables.showClients(em)!=0){
+			while(!flag_1){
+				System.out.println("\nInput client's id to change rights:");
+				client=em.find(Client.class,ConsoleInput.getInt());
+				if(client==null){
+					System.out.println("Invalid book id!");
+				}
+				else{
+					flag_1=true;
+				}
+			}
+			client.setAdmin(!client.isAdmin());
+			em.getTransaction().begin();
+			em.flush();
 			em.getTransaction().commit();
+			System.out.println("Rights change:"+client.getLogin()+" isAdmin-"+client.isAdmin()+"");
 		}
+
 	}
 	public static void delClient(EntityManager em){
 		
@@ -79,15 +91,15 @@ public class ClientManager {
 	}
 	public static void showYourHostory(EntityManager em){
 		
-		DynamicMenu.getInstance().setTitleHeader("\tYour sellhistory\t");
-		DynamicMenu.getInstance().showTitle();
-		System.out.println("Input your name:-->");
+		DynamicMenu title=new DynamicMenu();
+		title.setTitleHeader("\tYour sellhistory\t");
+		title.showTitle();
 
 		List l=em.createQuery("select sell, client.name, book.title  " +
 				"from Client as client " +
 				"join client.sellhistory as sell " +
 				"join sell.book as book " +
-				"where client.name='"+ConsoleInput.getString()+"'").getResultList();
+				"where client.name='"+Security.getInstance().getUserName()+"'").getResultList();
 		if(l.size()==0){
 			System.out.println("History not find!");
 		}

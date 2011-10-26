@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import menu.DynamicMenu;
 import menu.MenuAction;
 
+import Security.Security;
 import UI.ConsoleInput;
 import UI.ShowMenu;
 import UI.ShowTables;
@@ -22,6 +23,7 @@ import db.Sellhistory;
 
 public class BookManager {
 	
+	private static DynamicMenu title=new DynamicMenu();
 	
 	public static void manageBooks(){
 		
@@ -30,16 +32,21 @@ public class BookManager {
 		int number;
         
         do{
-        	ShowMenu.showMngBooksMenu(em);
-        	number = ConsoleInput.getInt();
-        	if(number==0){
-        		continue;
-        	}
-        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
-        		System.out.println("Invalid input,Try again");
+        	if(Security.getInstance().isLoginStatus()){
+        		ShowMenu.showMngBooksMenu(em);
+            	number = ConsoleInput.getInt();
+            	if(number==0){
+            		continue;
+            	}
+            	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
+            		System.out.println("Invalid input,Try again");
+            	}
+            	else{
+            		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
+            	}
         	}
         	else{
-        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        		number=0;
         	}
        	}
 		while (number!=0);
@@ -55,8 +62,9 @@ public class BookManager {
 		Collection<Author> col=new ArrayList<Author>();
 		boolean flag_1=false;
 		
-		DynamicMenu.getInstance().setTitleHeader("\tAdd book\t\t");
-		DynamicMenu.getInstance().showTitle();
+		title.setTitleHeader("\tAdd book\t\t");
+		title.showTitle();
+		
 		System.out.println("Input book title:");
 		b.setTitle(ConsoleInput.getString());
 		
@@ -109,8 +117,8 @@ public class BookManager {
 		
 		Book book;
 		
-		DynamicMenu.getInstance().setTitleHeader("\tDel book\t\t");
-		DynamicMenu.getInstance().showTitle();
+		title.setTitleHeader("\tDel book\t\t");
+		title.showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
 			System.out.println("Input book id to delete:");
@@ -134,8 +142,8 @@ public class BookManager {
 		boolean flag_1=false;
 		boolean flag_2=false;
 		
-		DynamicMenu.getInstance().setTitleHeader("\tAdd author to book\t");
-		DynamicMenu.getInstance().showTitle();
+		title.setTitleHeader("\tAdd author to book\t");
+		title.showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
 			
@@ -186,8 +194,8 @@ public class BookManager {
 		boolean flag_2=false;
 		boolean flag_3=false;
 		
-		DynamicMenu.getInstance().setTitleHeader("\tChange author\t\t");
-		DynamicMenu.getInstance().showTitle();
+		title.setTitleHeader("\tChange author\t\t");
+		title.showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
 			
@@ -254,8 +262,8 @@ public class BookManager {
 		boolean flag_1=false;
 		boolean flag_2=false;
 		
-		DynamicMenu.getInstance().setTitleHeader("  Delete author from book  ");
-		DynamicMenu.getInstance().showTitle();
+		title.setTitleHeader("  Delete author from book  ");
+		title.showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
 			
@@ -308,8 +316,8 @@ public class BookManager {
 		Book book=new Book();
 		boolean flag_1=false;
 		
-		DynamicMenu.getInstance().setTitleHeader("\tChange price\t");
-		DynamicMenu.getInstance().showTitle();
+		title.setTitleHeader("\tChange price\t");
+		title.showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
 			while(!flag_1){
@@ -335,16 +343,21 @@ public class BookManager {
 		int number;
         
         do{
-        	ShowMenu.showBuyBookMenu(em);
-        	number = ConsoleInput.getInt();
-        	if(number==0){
-        		continue;
-        	}
-        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
-        		System.out.println("Invalid input,Try again");
+        	if(Security.getInstance().isLoginStatus()){
+        		ShowMenu.showBuyBookMenu(em);
+            	number = ConsoleInput.getInt();
+            	if(number==0){
+            		continue;
+            	}
+            	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
+            		System.out.println("Invalid input,Try again");
+            	}
+            	else{
+            		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
+            	}
         	}
         	else{
-        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        		number=0;
         	}
        	}
 		while (number!=0);
@@ -361,6 +374,9 @@ public class BookManager {
 		
 		if(em.createQuery("from Book").getResultList().size()==0){
 			System.out.println("Nothing to buy!");
+		}
+		else if(!Security.getInstance().isLoginStatus()){
+			System.out.println("You are not login!");
 		}
 		else{
 			
@@ -411,11 +427,11 @@ public class BookManager {
         	if(number==0){
         		continue;
         	}
-        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
+        	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
         		System.out.println("Invalid input,Try again");
         	}
         	else{
-        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
         	}
        	}
 		while (number!=0);

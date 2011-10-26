@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 
 import menu.DynamicMenu;
 
+import Security.Security;
 import UI.ConsoleInput;
 import UI.ShowMenu;
 import UI.ShowTables;
@@ -19,16 +20,21 @@ public class AuthorManager {
 		int number;
         
         do{
-        	ShowMenu.showMngAuthMenu(em);
-        	number = ConsoleInput.getInt();
-        	if(number==0){
-        		continue;
-        	}
-        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
-        		System.out.println("Invalid input,Try again");
+        	if(Security.getInstance().isLoginStatus()){
+        		ShowMenu.showMngAuthMenu(em);
+            	number = ConsoleInput.getInt();
+            	if(number==0){
+            		continue;
+            	}
+            	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
+            		System.out.println("Invalid input,Try again");
+            	}
+            	else{
+            		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
+            	}
         	}
         	else{
-        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
+        		number=0;
         	}
        	}
 		while (number!=0);
@@ -41,8 +47,9 @@ public class AuthorManager {
 		
 		Author a=new Author();
 		
-		DynamicMenu.getInstance().setTitleHeader("\tAdd author\t\t");
-		DynamicMenu.getInstance().showTitle();
+		DynamicMenu title=new DynamicMenu();
+		title.setTitleHeader("\tAdd author\t\t");
+		title.showTitle();
 		
 		System.out.println("Input author's name:");
 		a.setName(ConsoleInput.getString());

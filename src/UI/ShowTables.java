@@ -98,9 +98,9 @@ public class ShowTables {
 		
 		List<Client> l=em.createQuery("from Client").getResultList();
 		if(l.size()!=0){
-			System.out.println("Id\tName");
+			System.out.println("Id\tName\tLogin\tisAdmin");
 			for(Client c:l){
-				System.out.println(c.getId()+"\t"+c.getName());
+				System.out.println(c.getId()+"\t"+c.getName()+"\t"+c.getLogin()+"\t"+c.isAdmin());
 			}
 			return l.size();
 		}

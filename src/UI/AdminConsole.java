@@ -1,6 +1,7 @@
 package UI;
 
-import menu.DynamicMenu;
+import Security.Security;
+
 
 
 public class AdminConsole {
@@ -11,22 +12,25 @@ public class AdminConsole {
 	
 	private static void adminAction(){
 
-        int number;
-        
-        do{
-        	ShowMenu.showAdminMenu();
-        	number = ConsoleInput.getInt();
-        	if(number==0){
-        		continue;
-        	}
-        	else if(DynamicMenu.getInstance().getMenuElements().get(number)==null){
-        		System.out.println("Invalid input,Try again");
-        	}
-        	else{
-        		DynamicMenu.getInstance().getMenuElements().get(number).getAction().action();
-        	}
-       	}
+		int number;
+	       do{
+	       	if(Security.getInstance().isLoginStatus()){
+	       		ShowMenu.showAdminMenu();
+	       		number = ConsoleInput.getInt();
+	       		if(number==0){
+	       			continue;
+	       		}
+	       		else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
+	       			System.out.println("Invalid input,Try again");
+	       		}
+	       		else{
+	       			ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
+	       		}
+	       	}
+	       	else{
+	       		number=0;
+	       	}
+     	}
 		while (number!=0);
-	}	
-	
+	}
 }
