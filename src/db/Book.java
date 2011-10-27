@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="BOOKS")
-// FIXME : why did you call class "Books" ? (in plural)
 public class Book implements Serializable{
 	 
 	@Id

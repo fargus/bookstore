@@ -1,143 +1,151 @@
 package UI;
 
-import javax.persistence.EntityManager;
-
 import Security.Security;
-
 import managers.AuthorManager;
 import managers.BookManager;
 import managers.ClientManager;
 import managers.HistoryManager;
+import menu.LoginRequiredMenu;
+import menu.LoginFreeMenu;
 import menu.DynamicMenu;
 import menu.MenuAction;
 
 public class ShowMenu {
 	
-	private static DynamicMenu menu=new DynamicMenu();
+	private DynamicMenu mainMenu=new LoginFreeMenu();
+	private DynamicMenu adminMenu=new LoginRequiredMenu();
+	private DynamicMenu mngClientsMenu=new LoginRequiredMenu();
+	private DynamicMenu mngHistMenu=new LoginRequiredMenu();
+	private DynamicMenu mngBooksMenu=new LoginRequiredMenu();
+	private DynamicMenu mngAuthMenu=new LoginRequiredMenu();
+	private DynamicMenu findBookMenu=new LoginFreeMenu();
+	private DynamicMenu buyBookMenu=new LoginRequiredMenu();
+	private static ShowMenu instance;
 	
-	public static void showMainMenu(final EntityManager em){
+	private ShowMenu(){
+		mainMenu.setHeader("\tWelcome to bookstore\t");
+		mainMenu.setAction(" Show books\t\t", new MenuAction(){public void action(){ShowTables.showBooks(mainMenu.getEm());}});
+		mainMenu.setAction(" Find books\t\t", new MenuAction(){public void action(){showFindBookMenu();}});
+		mainMenu.setAction(" Show authors\t\t", new MenuAction(){public void action(){ShowTables.showAuthors(mainMenu.getEm());}});
+		mainMenu.setAction(" Show authors w/o books\t", new MenuAction(){public void action(){ShowTables.showAithorWOBook(mainMenu.getEm());}});
+		mainMenu.setAction("Show avg price by author", new MenuAction(){public void action(){ShowTables.showAveragePriceByAuthor(mainMenu.getEm());}});
+		mainMenu.setAction("Show author with 2 books*\n*\t\tsold min\t", new MenuAction(){public void action(){ShowTables.showAuth2SoldMin(mainMenu.getEm());}});
+		mainMenu.setAction(" Buy book\t\t", new MenuAction(){public void action(){showBuyBookMenu();}});
+		mainMenu.setAction(" Show history\t\t", new MenuAction(){public void action(){ClientManager.showYourHostory(mainMenu.getEm());}});
+		mainMenu.setAction(" Admin console\t\t", new MenuAction(){public void action(){AdminConsole.run();}});
 		
-		getMenu().cleanMenu();
-		getMenu().setLoginAction(Security.getInstance().isLoginStatus());
-		getMenu().setHeader("\tWelcome to bookstore\t");
-		getMenu().setAction(" Show books\t\t", new MenuAction(){public void action(){ShowTables.showBooks(em);}});
-		getMenu().setAction(" Find books\t\t", new MenuAction(){public void action(){BookManager.findBooks(em);}});
-		getMenu().setAction(" Show authors\t\t", new MenuAction(){public void action(){ShowTables.showAuthors(em);}});
-		getMenu().setAction(" Show authors w/o books\t", new MenuAction(){public void action(){ShowTables.showAithorWOBook(em);}});
-		getMenu().setAction("Show avg price by author", new MenuAction(){public void action(){ShowTables.showAveragePriceByAuthor(em);}});
-		getMenu().setAction("Show author with 2 books*\n*\t\tsold min\t", new MenuAction(){public void action(){ShowTables.showAuth2SoldMin(em);}});
+		adminMenu.setHeader("\tAdmin console\t\t");
+		adminMenu.setAction(" Manage books\t\t", new MenuAction(){public void action(){showMngBooksMenu();}});
+		adminMenu.setAction(" Manage authors\t\t", new MenuAction(){public void action(){showMngAuthMenu();}});
+		adminMenu.setAction(" Manage clients\t\t", new MenuAction(){public void action(){showMngClientsMenu();}});
+		adminMenu.setAction(" Manage history\t\t", new MenuAction(){public void action(){showMngHistMenu();}});
+		
+		mngClientsMenu.setHeader("\tManage clients\t\t");
+		mngClientsMenu.setAction(" Show clients\t\t", new MenuAction(){public void action(){ShowTables.showClients(mngClientsMenu.getEm());}});
+		mngClientsMenu.setAction(" Change rights\t\t", new MenuAction(){public void action(){ClientManager.changeRights(mngClientsMenu.getEm());}});
+		mngClientsMenu.setAction(" Del clients\t\t", new MenuAction(){public void action(){ClientManager.delClient(mngClientsMenu.getEm());}});
+		
+		mngHistMenu.setHeader("\tManage history\t\t");
+		mngHistMenu.setAction(" Show history\t\t", new MenuAction(){public void action(){ShowTables.showHistory(mngHistMenu.getEm());}});
+		mngHistMenu.setAction(" Del history\t\t", new MenuAction(){public void action(){HistoryManager.deleteEntry(mngHistMenu.getEm());}});
+		mngHistMenu.setAction(" Total by date\t\t", new MenuAction(){public void action(){HistoryManager.totalOnDate(mngHistMenu.getEm());}});
+		mngHistMenu.setAction(" Total by date&clients\t", new MenuAction(){public void action(){HistoryManager.totalOnDateByClient(mngHistMenu.getEm());}});
+		mngHistMenu.setAction(" SuperQuery\t\t", new MenuAction(){public void action(){HistoryManager.superQuery(mngHistMenu.getEm());}});
+		
+		mngBooksMenu.setHeader("\tManage books\t\t");
+		mngBooksMenu.setAction(" Show books\t\t", new MenuAction(){public void action(){ShowTables.showBooks(mngBooksMenu.getEm());}});
+		mngBooksMenu.setAction(" Add books\t\t", new MenuAction(){public void action(){BookManager.addBook(mngBooksMenu.getEm());}});
+		mngBooksMenu.setAction(" Del books\t\t", new MenuAction(){public void action(){BookManager.delBook(mngBooksMenu.getEm());}});
+		mngBooksMenu.setAction(" Add author to book\t", new MenuAction(){public void action(){BookManager.addAuthToBook(mngBooksMenu.getEm());}});
+		mngBooksMenu.setAction(" Change author\t\t", new MenuAction(){public void action(){BookManager.changeAuth(mngBooksMenu.getEm());}});
+		mngBooksMenu.setAction(" Del author\t\t", new MenuAction(){public void action(){BookManager.delAuthFromBook(mngBooksMenu.getEm());}});
+		mngBooksMenu.setAction(" Change price\t\t", new MenuAction(){public void action(){BookManager.changePrice(mngBooksMenu.getEm());}});
+		
+		mngAuthMenu.setHeader("\tManage author\t\t");
+		mngAuthMenu.setAction(" Show authors\t\t", new MenuAction(){public void action(){ShowTables.showAuthors(mngAuthMenu.getEm());}});
+		mngAuthMenu.setAction(" Add author\t\t", new MenuAction(){public void action(){AuthorManager.addAuthor(mngAuthMenu.getEm());}});
+		
+		findBookMenu.setHeader(" Find books\t\t");
+		findBookMenu.setAction(" Find by title\t\t", new MenuAction(){public void action(){ShowTables.showBooksByTitle(findBookMenu.getEm());}});
+		findBookMenu.setAction(" Find by author\t\t", new MenuAction(){public void action(){ShowTables.showBooksByAuthor(findBookMenu.getEm());}});
+		findBookMenu.setAction(" Show pop book by qty\t", new MenuAction(){public void action(){ShowTables.showPopBookByQty(findBookMenu.getEm());}});
+		findBookMenu.setAction(" Show pop book by total\t", new MenuAction(){public void action(){ShowTables.showPopBookByTotal(findBookMenu.getEm());}});
+		findBookMenu.setAction(" Show unsold book\t", new MenuAction(){public void action(){ShowTables.showUnsoldBooks(findBookMenu.getEm());}});
+		
+		buyBookMenu.setHeader("\tBuy book\t\t");
+		buyBookMenu.setAction(" Select book from list\t", new MenuAction(){public void action(){ShowTables.showBooks(buyBookMenu.getEm());BookManager.buyBook(buyBookMenu.getEm());}});
+		buyBookMenu.setAction(" Find book\t\t", new MenuAction(){public void action(){showFindBookMenu();}});
+		buyBookMenu.setAction(" Buy book by id\t\t", new MenuAction(){public void action(){BookManager.buyBook(buyBookMenu.getEm());}});
+	}
+	
+	public static ShowMenu getInstance(){
+		if(instance==null){
+			instance=new ShowMenu();
+		}
+		return instance;
+	}
+	
+	public void showMainMenu(){
+		
+		mainMenu.showMenu();
+		
+	}
+	
+	public void showAdminMenu(){
+		
 		if(Security.getInstance().isLoginStatus()){
-			getMenu().setAction(" Buy book\t\t", new MenuAction(){public void action(){BookManager.buyBookMenu(em);}});
-			getMenu().setAction(" Show history\t\t", new MenuAction(){public void action(){ClientManager.showYourHostory(em);}});
 			if(Security.getInstance().isAdmin()){
-				getMenu().setAction(" Admin console\t\t", new MenuAction(){public void action(){AdminConsole.run();}});
+				adminMenu.showMenu();
+			}
+			else{
+				System.out.println("You are not admin!");
 			}
 		}
-		
-		getMenu().showMenu();
-		
-	}
-	
-	public static void showAdminMenu(){
-		
-		getMenu().cleanMenu();
-		getMenu().setLoginAction(Security.getInstance().isLoginStatus());
-		getMenu().setHeader("\tAdmin console\t\t");
-		getMenu().setAction(" Manage books\t\t", new MenuAction(){public void action(){BookManager.manageBooks();}});
-		getMenu().setAction(" Manage authors\t\t", new MenuAction(){public void action(){AuthorManager.manageAuthors();}});
-		getMenu().setAction(" Manage clients\t\t", new MenuAction(){public void action(){ClientManager.manageClients();}});
-		getMenu().setAction(" Manage history\t\t", new MenuAction(){public void action(){HistoryManager.manageHistory();}});
-		
-		getMenu().showMenu();
+		else{
+			System.out.println("You are not login!");
+		}
 		
 	}
 	
-	public static void showMngClientsMenu(final EntityManager em){
+	public void showMngClientsMenu(){
 		
-		getMenu().cleanMenu();
-		getMenu().setLoginAction(Security.getInstance().isLoginStatus());
-		getMenu().setHeader("\tManage clients\t\t");
-		getMenu().setAction(" Show clients\t\t", new MenuAction(){public void action(){ShowTables.showClients(em);}});
-		getMenu().setAction(" Change rights\t\t", new MenuAction(){public void action(){ClientManager.changeRights(em);}});
-		getMenu().setAction(" Del clients\t\t", new MenuAction(){public void action(){ClientManager.delClient(em);}});
-		
-		getMenu().showMenu();
+		mngClientsMenu.showMenu();
 		
 	}
 	
-	public static void showMngHistMenu(final EntityManager em){
+	public void showMngHistMenu(){
 		
-		getMenu().cleanMenu();
-		getMenu().setLoginAction(Security.getInstance().isLoginStatus());
-		getMenu().setHeader("\tManage history\t\t");
-		getMenu().setAction(" Show history\t\t", new MenuAction(){public void action(){ShowTables.showHistory(em);}});
-		getMenu().setAction(" Del history\t\t", new MenuAction(){public void action(){HistoryManager.deleteEntry(em);}});
-		getMenu().setAction(" Total by date\t\t", new MenuAction(){public void action(){HistoryManager.totalOnDate(em);}});
-		getMenu().setAction(" Total by date&clients\t", new MenuAction(){public void action(){HistoryManager.totalOnDateByClient(em);}});
-		getMenu().setAction(" SuperQuery\t\t", new MenuAction(){public void action(){HistoryManager.superQuery(em);}});
-		
-		getMenu().showMenu();
+		mngHistMenu.showMenu();
 		
 	}
 	
-	public static void showMngBooksMenu(final EntityManager em){
+	public void showMngBooksMenu(){
 		
-		getMenu().cleanMenu();
-		getMenu().setLoginAction(Security.getInstance().isLoginStatus());
-		getMenu().setHeader("\tManage books\t\t");
-		getMenu().setAction(" Show books\t\t", new MenuAction(){public void action(){ShowTables.showBooks(em);}});
-		getMenu().setAction(" Add books\t\t", new MenuAction(){public void action(){BookManager.addBook(em);}});
-		getMenu().setAction(" Del books\t\t", new MenuAction(){public void action(){BookManager.delBook(em);}});
-		getMenu().setAction(" Add author to book\t", new MenuAction(){public void action(){BookManager.addAuthToBook(em);}});
-		getMenu().setAction(" Change author\t\t", new MenuAction(){public void action(){BookManager.changeAuth(em);}});
-		getMenu().setAction(" Del author\t\t", new MenuAction(){public void action(){BookManager.delAuthFromBook(em);}});
-		getMenu().setAction(" Change price\t\t", new MenuAction(){public void action(){BookManager.changePrice(em);}});
-		
-		getMenu().showMenu();
+		mngBooksMenu.showMenu();
 		
 	}
 	
-	public static void showMngAuthMenu(final EntityManager em){
-
-		getMenu().cleanMenu();
-		getMenu().setLoginAction(Security.getInstance().isLoginStatus());
-		getMenu().setHeader("\tManage author\t\t");
-		getMenu().setAction(" Show authors\t\t", new MenuAction(){public void action(){ShowTables.showAuthors(em);}});
-		getMenu().setAction(" Add author\t\t", new MenuAction(){public void action(){AuthorManager.addAuthor(em);}});
+	public void showMngAuthMenu(){
 		
-		getMenu().showMenu();
+		mngAuthMenu.showMenu();
 		
 	}
 	
-	public static void showFindBookMenu(final EntityManager em){
+	public void showFindBookMenu(){
 		
-		getMenu().cleanMenu();
-		getMenu().setLoginAction(Security.getInstance().isLoginStatus());
-		getMenu().setHeader(" Find books\t\t");
-		getMenu().setAction(" Find by title\t\t", new MenuAction(){public void action(){ShowTables.showBooksByTitle(em);}});
-		getMenu().setAction(" Find by author\t\t", new MenuAction(){public void action(){ShowTables.showBooksByAuthor(em);}});
-		getMenu().setAction(" Show pop book by qty\t", new MenuAction(){public void action(){ShowTables.showPopBookByQty(em);}});
-		getMenu().setAction(" Show pop book by total\t", new MenuAction(){public void action(){ShowTables.showPopBookByTotal(em);}});
-		getMenu().setAction(" Show unsold book\t", new MenuAction(){public void action(){ShowTables.showUnsoldBooks(em);}});
-		
-		getMenu().showMenu();
+		findBookMenu.showMenu();
 		
 	}
 	
-	public static void showBuyBookMenu(final EntityManager em){
+	public void showBuyBookMenu(){
 		
-		getMenu().cleanMenu();
-		getMenu().setLoginAction(Security.getInstance().isLoginStatus());
-		getMenu().setHeader("\tBuy book\t\t");
-		getMenu().setAction(" Select book from list\t", new MenuAction(){public void action(){ShowTables.showBooks(em);BookManager.buyBook(em);}});
-		getMenu().setAction(" Find book\t\t", new MenuAction(){public void action(){BookManager.findBooks(em);}});
-		getMenu().setAction(" Buy book by id\t\t", new MenuAction(){public void action(){BookManager.buyBook(em);}});
-		
-		getMenu().showMenu();
+		if(Security.getInstance().isLoginStatus()){
+			buyBookMenu.showMenu();
+		}
+		else{
+			System.out.println("You are not login!");
+		}
 		
 	}
 
-	public static DynamicMenu getMenu() {
-		return menu;
-	}
 }

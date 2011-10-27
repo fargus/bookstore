@@ -4,49 +4,20 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import menu.LoginFreeMenu;
 import menu.DynamicMenu;
+import menu.Title;
 
 import Security.Security;
 import UI.ConsoleInput;
-import UI.ShowMenu;
 import UI.ShowTables;
-import db.Book;
 import db.Client;
-import db.MyEntityManager;
 import db.Sellhistory;
+
 
 public class ClientManager {
 	
-	public static void manageClients(){
-		
-		EntityManager em=MyEntityManager.getEM();
-		
-		int number;
-        
-        do{
-        	if(Security.getInstance().isLoginStatus()){
-        		ShowMenu.showMngClientsMenu(em);
-            	number = ConsoleInput.getInt();
-            	if(number==0){
-            		continue;
-            	}
-            	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
-            		System.out.println("Invalid input,Try again");
-            	}
-            	else{
-            		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
-            	}
-        	}
-        	else{
-        		number=0;
-        	}
-       	}
-		while (number!=0);
-			
-		em.close();
-	}
-	
-	
+	private static Title title=new Title("\tYour sellhistory\t");
 	
 	public static void changeRights(EntityManager em){
 		
@@ -91,25 +62,29 @@ public class ClientManager {
 	}
 	public static void showYourHostory(EntityManager em){
 		
-		DynamicMenu title=new DynamicMenu();
-		title.setTitleHeader("\tYour sellhistory\t");
-		title.showTitle();
+		if(Security.getInstance().isLoginStatus()){
+			title.showTitle();
 
-		List l=em.createQuery("select sell, client.name, book.title  " +
-				"from Client as client " +
-				"join client.sellhistory as sell " +
-				"join sell.book as book " +
-				"where client.name='"+Security.getInstance().getUserName()+"'").getResultList();
-		if(l.size()==0){
-			System.out.println("History not find!");
+			List l=em.createQuery("select sell, client.name, book.title  " +
+					"from Client as client " +
+					"join client.sellhistory as sell " +
+					"join sell.book as book " +
+					"where client.name='"+Security.getInstance().getUserName()+"'").getResultList();
+			if(l.size()==0){
+				System.out.println("History not find!");
+			}
+			else{
+				System.out.println("Book\tClient\tPrice\tDate");
+				for(int i=0;i<l.size();i++){
+					Object[] obj=(Object[]) l.get(i);
+					Sellhistory sell=(Sellhistory)obj[0];
+					System.out.println(obj[2]+"\t"+obj[1]+"\t"+sell.getPrice()+"\t"+sell.getDate().toString().substring(0, 10));
+				}	
+			}
 		}
 		else{
-			System.out.println("Book\tClient\tPrice\tDate");
-			for(int i=0;i<l.size();i++){
-				Object[] obj=(Object[]) l.get(i);
-				Sellhistory sell=(Sellhistory)obj[0];
-				System.out.println(obj[2]+"\t"+obj[1]+"\t"+sell.getPrice()+"\t"+sell.getDate().toString().substring(0, 10));
-			}	
+			System.out.println("You are not login!");
 		}
+		
 	}	
 }

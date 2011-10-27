@@ -2,29 +2,26 @@ package menu;
 
 import java.util.HashMap;
 
-import Security.Security;
-import UI.ClientConsole;
-import UI.ShowMenu;
+import javax.persistence.EntityManager;
 
-public class DynamicMenu {
+import db.MyEntityManager;
+
+import Security.Security;
+
+public abstract class DynamicMenu {
 	
 	private int numOfAction;
 	private String menuHeader;
-	private String titleHeader;
 	private HashMap<Integer, MenuElement> action;
-	private static DynamicMenu instance;
+	private EntityManager em;
 	
 	public DynamicMenu(){
 		numOfAction=0;
 		menuHeader="";
-		titleHeader="";
+		em=MyEntityManager.getEM();
 		action=new HashMap<Integer, MenuElement>();
 		action.put(88, new MenuElement("Registration\t\t",
 				new MenuAction(){public void action(){Security.getInstance().registration();}}));
-	}
-	
-	public static synchronized DynamicMenu getInstance(){
-		return instance=new DynamicMenu();
 	}
 
 	public void setHeader(String header) {
@@ -35,12 +32,8 @@ public class DynamicMenu {
 		return menuHeader;
 	}
 	
-	public void setTitleHeader(String titleHeader) {
-		this.titleHeader = titleHeader;
-	}
-
-	public String getTitleHeader() {
-		return titleHeader;
+	public EntityManager getEm() {
+		return em;
 	}
 
 	public void setAction(String name,MenuAction action) {
@@ -71,7 +64,7 @@ public class DynamicMenu {
 		menuHeader="";
 	}
 	
-	public void showMenu(){
+	public void showNames(){
 		
 		System.out.println("*---------------------------*");
 		System.out.println("*"+menuHeader+"*");
@@ -86,12 +79,7 @@ public class DynamicMenu {
 		System.out.println("*---------------------------*");
 		System.out.println("Choose your action:-->");
 	}
+	
+	public abstract void showMenu();
 
-	public void showTitle(){
-		System.out.println("*---------------------------*");
-		System.out.println("*"+titleHeader+"*");
-		System.out.println("*---------------------------*");
-	}
-	
-	
 }

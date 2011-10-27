@@ -5,9 +5,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import UI.ConsoleInput;
-import UI.ShowMenu;
 
-import menu.DynamicMenu;
+import menu.Title;
 
 import db.Client;
 import db.MyEntityManager;
@@ -18,16 +17,14 @@ public class Security {
 	private Client user;
 	private static Security instance;
 	private EntityManager em;
-	private DynamicMenu loginTitle;
-	private DynamicMenu regTitle;
+	private Title loginTitle;
+	private Title regTitle;
 	
 	private Security(){
 		loginStatus=false;
 		em=MyEntityManager.getEM();
-		loginTitle=new DynamicMenu();
-		loginTitle.setTitleHeader("\t\tLogin\t\t");
-		regTitle=new DynamicMenu();
-		regTitle.setTitleHeader("\t  Registration\t\t");
+		loginTitle=new Title("\t\tLogin\t\t");
+		regTitle=new Title("\t  Registration\t\t");
 	}
 	
 	public static synchronized Security getInstance(){
@@ -45,7 +42,6 @@ public class Security {
 		if(l.size()!=0){
 			user=l.get(0);
 			loginStatus=true;
-			DynamicMenu.getInstance().setLoginAction(loginStatus);
 		}
 		else{
 			System.out.println("Login not find!");
@@ -94,7 +90,15 @@ public class Security {
 	public String getUserLogin(){
 		return user.getLogin();
 	}
+	
+	public int getUserId(){
+		return user.getId();
+	}
+	
 	public boolean isAdmin(){
-		return user.isAdmin();
+		if(user!=null){
+			return user.isAdmin();
+		}
+		return false;
 	}
 }

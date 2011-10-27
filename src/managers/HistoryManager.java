@@ -3,55 +3,22 @@ package managers;
 import java.util.List;
 import javax.persistence.EntityManager;
 
-import menu.DynamicMenu;
+import menu.Title;
 
-import Security.Security;
 import UI.ConsoleInput;
-import UI.ShowMenu;
 import UI.ShowTables;
 
 import db.Author;
 import db.Client;
-import db.MyEntityManager;
 import db.Sellhistory;
+
 
 public class HistoryManager {
 	
-	
-	public static void manageHistory(){
-		
-		EntityManager em=MyEntityManager.getEM();
-
-		int number;
-        
-        do{
-        	if(Security.getInstance().isLoginStatus()){
-        		ShowMenu.showMngHistMenu(em);
-            	number = ConsoleInput.getInt();
-            	if(number==0){
-            		continue;
-            	}
-            	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
-            		System.out.println("Invalid input,Try again");
-            	}
-            	else{
-            		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
-            	}
-        	}
-        	else{
-        		number=0;
-        	}
-       	}
-		while (number!=0);
-		
-		em.close();
-	}
-	
+	private static Title title=new Title("\tDelete history\t\t");
 	
 	public static void deleteEntry(EntityManager em){
 		
-		DynamicMenu title=new DynamicMenu();
-		title.setTitleHeader("\tDelete history\t\t");
 		title.showTitle();
 		
 		if(ShowTables.showHistory(em)!=0){
@@ -109,8 +76,6 @@ public class HistoryManager {
 		
 		boolean flag_1=false;
 		boolean flag_2=false;
-		String begin_date;
-		String end_date;
 		Author author;
 		Client client;
 		
@@ -142,9 +107,9 @@ public class HistoryManager {
 				
 				
 				System.out.println("Input begin date(yyyy-MM-dd):");
-				begin_date=ConsoleInput.getDate();
+					String begin_date=ConsoleInput.getDate();
 				System.out.println("Input end date(yyyy-MM-dd):");
-				end_date=ConsoleInput.getDate();;
+					String end_date=ConsoleInput.getDate();;
 				
 				List<Object[]> l=em.createQuery("select client.name, " +
 						"author.name, sell.date, count(*) " +

@@ -3,56 +3,25 @@ package managers;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import menu.DynamicMenu;
-import menu.MenuAction;
+import menu.Title;
 
 import Security.Security;
 import UI.ConsoleInput;
-import UI.ShowMenu;
 import UI.ShowTables;
 
 import db.Author;
 import db.Book;
 import db.Client;
-import db.MyEntityManager;
 import db.Sellhistory;
+
 
 public class BookManager {
 	
-	private static DynamicMenu title=new DynamicMenu();
-	
-	public static void manageBooks(){
-		
-		EntityManager em=MyEntityManager.getEM();
+	private static Title title=new Title();
 
-		int number;
-        
-        do{
-        	if(Security.getInstance().isLoginStatus()){
-        		ShowMenu.showMngBooksMenu(em);
-            	number = ConsoleInput.getInt();
-            	if(number==0){
-            		continue;
-            	}
-            	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
-            		System.out.println("Invalid input,Try again");
-            	}
-            	else{
-            		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
-            	}
-        	}
-        	else{
-        		number=0;
-        	}
-       	}
-		while (number!=0);
-
-		em.close();
-	}
 	
 	public static void addBook(EntityManager em){
 		
@@ -62,7 +31,7 @@ public class BookManager {
 		Collection<Author> col=new ArrayList<Author>();
 		boolean flag_1=false;
 		
-		title.setTitleHeader("\tAdd book\t\t");
+		title.setTitle("\tAdd book\t\t");
 		title.showTitle();
 		
 		System.out.println("Input book title:");
@@ -115,15 +84,13 @@ public class BookManager {
 	}
 	public static void delBook(EntityManager em){
 		
-		Book book;
-		
-		title.setTitleHeader("\tDel book\t\t");
+		title.setTitle("\tDel book\t\t");
 		title.showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
 			System.out.println("Input book id to delete:");
 			
-			book=em.find(Book.class,ConsoleInput.getInt());
+			Book book=em.find(Book.class,ConsoleInput.getInt());
 			if(book==null){
 				System.out.println("Book not find!");
 			}
@@ -142,7 +109,7 @@ public class BookManager {
 		boolean flag_1=false;
 		boolean flag_2=false;
 		
-		title.setTitleHeader("\tAdd author to book\t");
+		title.setTitle("\tAdd author to book\t");
 		title.showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
@@ -194,7 +161,7 @@ public class BookManager {
 		boolean flag_2=false;
 		boolean flag_3=false;
 		
-		title.setTitleHeader("\tChange author\t\t");
+		title.setTitle("\tChange author\t\t");
 		title.showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
@@ -262,7 +229,7 @@ public class BookManager {
 		boolean flag_1=false;
 		boolean flag_2=false;
 		
-		title.setTitleHeader("  Delete author from book  ");
+		title.setTitle("  Delete author from book  ");
 		title.showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
@@ -316,7 +283,7 @@ public class BookManager {
 		Book book=new Book();
 		boolean flag_1=false;
 		
-		title.setTitleHeader("\tChange price\t");
+		title.setTitle("\tChange price\t");
 		title.showTitle();
 		
 		if(ShowTables.showBooks(em)!=0){
@@ -339,35 +306,12 @@ public class BookManager {
 			System.out.println("Price change:"+book.getTitle()+"-"+book.getPrice()+"");
 		}
 	}
-	public static void buyBookMenu(EntityManager em){
-		int number;
-        
-        do{
-        	if(Security.getInstance().isLoginStatus()){
-        		ShowMenu.showBuyBookMenu(em);
-            	number = ConsoleInput.getInt();
-            	if(number==0){
-            		continue;
-            	}
-            	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
-            		System.out.println("Invalid input,Try again");
-            	}
-            	else{
-            		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
-            	}
-        	}
-        	else{
-        		number=0;
-        	}
-       	}
-		while (number!=0);
-	}
+	
 	public static void buyBook(EntityManager em){
 		
-		int bayid;
 		String confirm="";
 		Book book=new Book();
-		Client client=em.find(Client.class, 1);
+		Client client=em.find(Client.class, Security.getInstance().getUserId());
 		boolean flag_1=false;
 		
 		em.getTransaction().begin();
@@ -382,7 +326,7 @@ public class BookManager {
 			
 			while(!flag_1){
 				System.out.println("Input id book to buy:");
-				bayid=ConsoleInput.getInt();
+				int bayid=ConsoleInput.getInt();
 				book=em.find(Book.class,bayid);
 				if(book==null){
 					System.out.println("Invalid book id!");
@@ -400,16 +344,14 @@ public class BookManager {
 			
 			if (confirm.equals("Y")){
 				Sellhistory sh=new Sellhistory();
-				java.util.Date date=new java.util.Date();
-				// FIXME : using deprecated API 
-				Date sqlDate=new Date(date.getYear(),date.getMonth() , date.getDate());
+				Date sqlDate=new Date(new java.util.Date().getTime());
 				sh.setBook(book);
 				sh.setClient(client);
 				sh.setPrice(book.getPrice());
 				sh.setDate(sqlDate);
 				em.persist(sh);
-				DynamicMenu.getInstance().setTitleHeader(" Thank's for purchase  ");
-				DynamicMenu.getInstance().showTitle();
+				title.setTitle(" Thank's for purchase  ");
+				title.showTitle();
 			}
 			else{
 				System.out.println(":)");;
@@ -417,24 +359,4 @@ public class BookManager {
 		}
 		em.getTransaction().commit();
 	}	
-	public static void findBooks(EntityManager em){
-		
-		int number;
-        
-        do{
-        	ShowMenu.showFindBookMenu(em);
-        	number = ConsoleInput.getInt();
-        	if(number==0){
-        		continue;
-        	}
-        	else if(ShowMenu.getMenu().getMenuElements().get(number)==null){
-        		System.out.println("Invalid input,Try again");
-        	}
-        	else{
-        		ShowMenu.getMenu().getMenuElements().get(number).getAction().action();
-        	}
-       	}
-		while (number!=0);
-		
-	}
 }

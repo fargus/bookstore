@@ -22,13 +22,10 @@ public class ShowTables {
 	}
 	public static int showBooks(EntityManager em){
 		
-		Book b;
-		String name;
 		int current_id;
 		int last_id=0;
-		List l;
 		
-		l=em.createQuery(
+		List<Object[]> l=em.createQuery(
 				"select book, author.name " +
 				"from Book as book left join" +
 				" book.idauthors as author").getResultList();
@@ -39,10 +36,10 @@ public class ShowTables {
 		else{
 			System.out.print("Id\tTitle\tPrice\tAuthors");
 			for(int i=0;i<l.size();i++){
-				Object[] row=(Object[])l.get(i);
-				b=(Book)row[0];
+				Object[] row=l.get(i);
+				Book b=(Book)row[0];
 				current_id=b.getId();
-				name=row[1].toString();
+				String name=row[1].toString();
 				if(current_id!=last_id){
 					System.out.print("\n"+b.getId()+"\t"+b.getTitle()+"\t"+b.getPrice()+"\t"+name);
 				}
@@ -57,14 +54,10 @@ public class ShowTables {
 	}	
 	public static int showAuthors(EntityManager em){
 		
-		List l;
-		Author a;
-		
-		l=em.createQuery("from Author").getResultList();
+		List<Author> l=em.createQuery("from Author").getResultList();
 		if(l.size()!=0){
 			System.out.println("*Id*\t*Name*");
-			for(Object obj:l){
-				a=(Author)obj;
+			for(Author a:l){
 				System.out.println(a.getId()+"\t\t"+a.getName());
 			}	
 			return l.size();
