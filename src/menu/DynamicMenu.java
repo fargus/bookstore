@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import javax.persistence.EntityManager;
 
-import db.MyEntityManager;
+import db.MyEntityManagerFactory;
 
 import Security.Security;
 
@@ -18,7 +18,7 @@ public abstract class DynamicMenu {
 	public DynamicMenu(){
 		numOfAction=0;
 		menuHeader="";
-		em=MyEntityManager.getEM();
+		em=MyEntityManagerFactory.getInstance().getEntityManagerFactory().createEntityManager();
 		action=new HashMap<Integer, MenuElement>();
 		action.put(88, new MenuElement("Registration\t\t",
 				new MenuAction(){public void action(){Security.getInstance().registration();}}));

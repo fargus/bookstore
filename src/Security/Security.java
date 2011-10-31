@@ -9,7 +9,7 @@ import UI.ConsoleInput;
 import menu.Title;
 
 import db.Client;
-import db.MyEntityManager;
+import db.MyEntityManagerFactory;
 
 public class Security {
 	
@@ -22,7 +22,7 @@ public class Security {
 	
 	private Security(){
 		loginStatus=false;
-		em=MyEntityManager.getEM();
+		em=MyEntityManagerFactory.getInstance().getEntityManagerFactory().createEntityManager();
 		loginTitle=new Title("\t\tLogin\t\t");
 		regTitle=new Title("\t  Registration\t\t");
 	}
